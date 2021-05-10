@@ -10,7 +10,11 @@ function validateConfirmPassword(password,confirmPassword){
 function validateEmptyFields(...args){
     let is_valid = true
     args.forEach((arg)=>{
-        if(arg===undefined || arg==="")
+        if(typeof(arg)==Array){
+            if(arg.length==0)
+                is_valid=false
+        }
+        else if(arg===undefined || arg==="")
             is_valid = false
     })
     return is_valid

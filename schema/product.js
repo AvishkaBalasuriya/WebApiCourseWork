@@ -5,9 +5,13 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Vendor' 
     },
-    category:{
+    masterCategory:{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Category' 
+        ref: 'MasterCategory' 
+    },
+    subCategory:{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'SubCategory' 
     },
     name: String,
     description: String,

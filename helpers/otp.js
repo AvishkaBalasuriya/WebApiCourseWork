@@ -8,17 +8,19 @@ const email = require('../services/email')
 const userModel = require('../models/user')
 const otpModel = require('../models/otp')
 
-function issueAnOtp(contact){
+function issueAnOtp(contact,contactType){
     return new Promise(async(resolve,reject)=>{
         try{
-            let user = await userModel.User.findOne({ $or: [ {email:contact},{mobileNumber:contact} ] })
-    
+            if(contactType){
+                var user = await userModel.User.findOne({mobileNumber:contact})
+            }else{
+                var user = await userModel.User.findOne({email:contact})
+            }
+
             if(!user)
                 return reject("Contact information is not match with any of our users")
     
             let code = codeGenerator.generateOtp()
-
-            let contactType = validators.validateContactType(contact)
     
             let otpDetails = otpModel.Otp({user:user,code:code,sentTo:contactType})
     
@@ -57,6 +59,8 @@ function verifyAnOtp(otp,userId){
 
             if(!otpDetails)
                 return reject("Invalid OTP code")
+            
+            let user = await userModel.User.findOne({_id:new userModel.mongoose.Types.ObjectId(userId)})
 
             if(otpDetails.isVerified)
                 return reject("This OTP code is already verified")
@@ -65,6 +69,22 @@ function verifyAnOtp(otp,userId){
 
             if(timeAfterOtpIssued>=120)
                 return reject("OTP code expired. Please try with new OTP")
+
+            if(user.status!=1){
+                user.status=1
+
+                otpDetails.isVerified = true
+                otpDetails.isActive = false
+
+                await user.save()
+                await otpDetails.save()
+
+                let data = {
+                    userId:otpDetails.user._id
+                }
+                
+                return resolve(data)
+            }
             
             let uuid = codeGenerator.generateUUID()
 

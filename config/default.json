@@ -3,10 +3,10 @@
         "port": 3000
     },
     "mongodb": {
-        "host":"127.0.0.1",
+        "host":"webapi.0enqn.mongodb.net",
         "database": "WebApi",
-        "user": "",
-        "password":""
+        "user": "WebApi",
+        "password":"webApi2021"
     },
     "sms":{
         "userId":"13385",
