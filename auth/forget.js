@@ -20,15 +20,17 @@ module.exports=((otpId,rawPassword)=>{
 
             user.rawPassword = rawPassword
 
-            let userResult = await user.save()
-            let otpResult = await otpDetails.save()
+            user.save().then((res)=>{
 
-            if(!userResult && !otpResult)
-                return reject("Unable complete db transaction")
+                otpDetails.save().then((res)=>{
 
-            let payload = jwt.makePayloadWithUser(otpDetails.user)
+                    let payload = jwt.makePayloadWithUser(otpDetails.user)
+                    return resolve({'accessToken':jwt.generateJWT(payload)})
 
-            return resolve({'accessToken':jwt.generateJWT(payload)})
+                }).catch((e)=>{return reject("Unable complete db transaction")})
+                
+            }).catch((e)=>{return reject("Unable complete db transaction")})
+
         }catch(e){
             return reject(e.message)
         }
