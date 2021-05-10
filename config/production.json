@@ -6,7 +6,7 @@
         "host":"webapi.0enqn.mongodb.net",
         "database": "WebApi",
         "user": "WebApi",
-        "password":"webApi@2021"
+        "password":"webApi2021"
     },
     "sms":{
         "userId":"13093",

@@ -24,7 +24,8 @@ app.use('/api/products',productRoute)
 app.listen(port,()=>{
     console.log("Running on port: "+port)
     try{
-        mongoose.connect(`mongodb+srv://ilabs:${config.get("mongodb.password")}@${config.get("mongodb.host")}/${config.get("mongodb.database")}??retryWrites=true&w=majority`, 
+        console.log(`mongodb+srv://${config.get("mongodb.user")}:${config.get("mongodb.password")}@${config.get("mongodb.host")}/${config.get("mongodb.database")}?retryWrites=true&w=majority`)
+        mongoose.connect(`mongodb+srv://${config.get("mongodb.user")}:${config.get("mongodb.password")}@${config.get("mongodb.host")}/${config.get("mongodb.database")}?retryWrites=true&w=majority`, 
         {useNewUrlParser: true, useUnifiedTopology: true})
         console.log("Connected to mongodb database")
     }catch(e){
