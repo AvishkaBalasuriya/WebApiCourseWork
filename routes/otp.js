@@ -13,10 +13,12 @@ module.exports = (()=>{
             if(!validator.validateEmptyFields(contact))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,data:null})
 
-            if(validator.validateContactType(contact)===-1)
+            let contactType = validator.validateContactType(contact)
+
+            if(contactType===-1)
                 return respond.status(200).send({success:false,message:'Provided contact is not valid',error:null,data:null})
             
-            otp.issueAnOtp(contact).then((result)=>{
+            otp.issueAnOtp(contact,contactType).then((result)=>{
                 return respond.status(200).send({success:true,message:'OTP code successfully sent to '+contact,error:null,data:result})
             }).catch((error)=>{
                 return respond.status(200).send({success:false,message:'Unable to issue an OTP',error:error,data:null})
