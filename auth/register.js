@@ -8,16 +8,13 @@ module.exports=((user)=>{
             if(!isUserAlreadyRegistered)
                 return reject('User already registered')
 
-            let result = await user.save()
+            user.save().then((res)=>{
+                let data = {
+                    userId:user._id,
+                }
+                return resolve(data)
+            }).catch((e)=>{return reject('Unable to save user')})
 
-            if(!result)
-                return reject('Unable to save user')
-            
-            let data = {
-                userId:user._id,
-            }
-
-            return resolve(data)
         }catch(e){
             return reject(e.message)
         }

@@ -90,12 +90,8 @@ function updateOne(productId,data){
             product.isAvailable=data.isAvailable,
             product.status=data.status
         
-            let dbResult = await product.save()
-
-            if(!dbResult)
-                return reject("Unable to update product")
-
-            return resolve(products)
+            product.save().then(res=>{return resolve(products)}).catch((e)=>{return reject("Unable to update product")})
+            
         }catch(e){
             return reject(e.message)
         }
@@ -105,13 +101,8 @@ function updateOne(productId,data){
 function deleteAll(){
     return new Promise(async(resolve,reject)=>{
         try{
-        
-            let dbResult = await product.delete()
 
-            if(!dbResult)
-                return reject("Unable to delete all products in the database")
-
-            return resolve(true)
+            product.delete().then(res=>{return resolve(true)}).catch((e)=>{return reject("Unable to delete all products in the database")})
 
         }catch(e){
             return reject(e.message)
@@ -123,12 +114,7 @@ function deleteOne(productId){
     return new Promise(async(resolve,reject)=>{
         try{
         
-            let dbResult = await product.delete({_id:new productModel.mongoose.Types.ObjectId(productId)})
-
-            if(!dbResult)
-                return reject("Unable to delete product in the database")
-
-            return resolve(true)
+            product.delete({_id:new productModel.mongoose.Types.ObjectId(productId)}).then(res=>{return resolve(true)}).catch((e)=>{return reject("Unable to delete product in the database")})
 
         }catch(e){
             return reject(e.message)

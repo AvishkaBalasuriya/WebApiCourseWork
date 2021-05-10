@@ -36,16 +36,14 @@ function issueAnOtp(contact,contactType){
                 })
             }
     
-            let result = await otpDetails.save()
+            otpDetails.save().then((res)=>{
+                let data = {
+                    userId:user._id
+                }
+        
+                return resolve(data)
+            }).catch((e)=>{return reject("Unable to save otp details")})
     
-            if(!result)
-                return reject("Unable to save otp details")
-    
-            let data = {
-                userId:user._id
-            }
-    
-            return resolve(data)
         }catch(e){
             return reject(e.message)
         }
@@ -92,17 +90,15 @@ function verifyAnOtp(otp,userId){
             otpDetails.isActive = true
             otpDetails.uuid = uuid
 
-            let result = await otpDetails.save()
-
-            if(!result)
-                return reject("Unable to save otp details")
-
-            let data = {
-                userId:otpDetails.user._id,
-                otpId:uuid
-            }
-
-            return resolve(data)
+            otpDetails.save().then((res)=>{
+                let data = {
+                    userId:otpDetails.user._id,
+                    otpId:uuid
+                }
+            
+                return resolve(data)
+            }).catch((e)=>{return reject("Unable to save otp details")})
+            
         }catch(e){
             return reject(e.message)
         }
