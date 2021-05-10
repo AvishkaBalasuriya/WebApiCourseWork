@@ -87,7 +87,7 @@ module.exports = (()=>{
             forget(otpId,password).then((result)=>{
                 return respond.status(200).send({success:true,message:'Password successfully changed',error:null,data:result})
             }).catch((error)=>{
-                return respond.status(200).send({success:true,message:'Password reset failed',error:error,data:null})
+                return respond.status(200).send({success:false,message:'Password reset failed',error:error,data:null})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,data:null})

@@ -9,23 +9,22 @@ const port = process.env.PORT || config.get('app.port')
 const app = express()
 
 const authRoute = require('./routes/auth')
-const orderRoute = require('./routes/order')
 const otpRoute = require('./routes/otp')
+const productRoute = require('./routes/product')
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.use('/api/auth',authRoute)
-app.use('/api/order',orderRoute)
 app.use('/api/otp',otpRoute)
-// app.use('/api/product',productRoute)
+app.use('/api/products',productRoute)
 // app.use('/api/vendor',vendorRoute)
 
 app.listen(port,()=>{
     console.log("Running on port: "+port)
     try{
-        mongoose.connect(`mongodb://${config.get("mongodb.host")}:${config.get("mongodb.port")}/${config.get("mongodb.database")}`, 
+        mongoose.connect(`mongodb+srv://ilabs:${config.get("mongodb.password")}@${config.get("mongodb.host")}/${config.get("mongodb.database")}??retryWrites=true&w=majority`, 
         {useNewUrlParser: true, useUnifiedTopology: true})
         console.log("Connected to mongodb database")
     }catch(e){
