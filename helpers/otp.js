@@ -3,6 +3,7 @@ const validators = require('../utils/validators')
 const time = require('../utils/time')
 
 const sms = require('../services/sms')
+const email = require('../services/email')
 
 const userModel = require('../models/user')
 const otpModel = require('../models/otp')
@@ -25,11 +26,12 @@ function issueAnOtp(contact){
     
             if(contactType===1){
                 await sms.sendSms(contact,messageContent).catch((error)=>{
-                    return reject(error);
+                    return reject(error)
                 })
             }else{
-                console.log("Sending email")
-                //Send email
+                await email.sendEmail(contact,"Verify OTP",messageContent).catch((error)=>{
+                    return reject(error)
+                })
             }
     
             let result = await otpDetails.save()
@@ -61,9 +63,8 @@ function verifyAnOtp(otp,userId){
 
             let timeAfterOtpIssued = time.calculateTimeDifferent(otpDetails.createdAt,new Date())
 
-            if(timeAfterOtpIssued>=120){
+            if(timeAfterOtpIssued>=120)
                 return reject("OTP code expired. Please try with new OTP")
-            }
             
             let uuid = codeGenerator.generateUUID()
 
