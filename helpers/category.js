@@ -1,10 +1,10 @@
-const masterCategoryModel = require('../models/masterCategory').MasterCategory
-const subCategoryModel = require('../models/subCategory').SubCategory
+const masterCategoryModel = require('../models/masterCategory')
+const subCategoryModel = require('../models/subCategory')
 
 function getAll(){
     return new Promise(async(resolve,reject)=>{
         try{
-            let categories = await masterCategoryModel.find().populate('subCategory')
+            let categories = await masterCategoryModel.MasterCategory.find().populate('subCategory')
         
             resolve(categories)
         }catch(e){
@@ -20,61 +20,34 @@ function addNewMasterCategory(name){
                 name:name
             })
 
-            let result = await masterCategory()
+            masterCategory.save().then((res)=>{
+                return resolve(data)
+            }).catch((e)=>{return reject("Unable to save master category")})
         }catch(e){
             return reject(e.message)
         }
     })
 }
 
-function addNewSubCategory(otp,userId){
+function addNewSubCategory(masterCategoryId,SubCategoryName){
     return new Promise(async(resolve,reject)=>{
         try{
-            let otpDetails = await otpModel.Otp.findOne({user:new userModel.mongoose.Types.ObjectId(userId),code:otp})
+            let masterCategory = await new masterCategoryModel.find({_id:new masterCategoryModel.mongoose.Types.ObjectId(masterCategoryId)})
 
-            if(!otpDetails)
-                return reject("Invalid OTP code")
-            
-            let user = await userModel.User.findOne({_id:new userModel.mongoose.Types.ObjectId(userId)})
+            if(!MasterCategory)
+                return reject("Invalid master category ID")
 
-            if(otpDetails.isVerified)
-                return reject("This OTP code is already verified")
+            let subCategory = new subCategoryModel.SubCategory({
+                name:SubCategoryName
+            })
 
-            let timeAfterOtpIssued = time.calculateTimeDifferent(otpDetails.createdAt,new Date())
-
-            if(timeAfterOtpIssued>=120)
-                return reject("OTP code expired. Please try with new OTP")
-
-            if(user.status!=1){
-                user.status=1
-
-                otpDetails.isVerified = true
-                otpDetails.isActive = false
-
-                await user.save()
-                await otpDetails.save()
-
-                let data = {
-                    userId:otpDetails.user._id
-                }
-                
-                return resolve(data)
-            }
-            
-            let uuid = codeGenerator.generateUUID()
-
-            otpDetails.isVerified = true
-            otpDetails.isActive = true
-            otpDetails.uuid = uuid
-
-            otpDetails.save().then((res)=>{
-                let data = {
-                    userId:otpDetails.user._id,
-                    otpId:uuid
-                }
-            
-                return resolve(data)
-            }).catch((e)=>{return reject("Unable to save otp details")})
+            subCategory.save().then((res)=>{
+                masterCategory.subCategory.push(subCategory._id).then((res)=>{
+                    return resolve(data)
+                }).catch((e)=>{
+                    return reject("Unable to complete database transaction")
+                })
+            }).catch((e)=>{return reject("Unable to save master category")})
             
         }catch(e){
             return reject(e.message)
@@ -84,4 +57,4 @@ function addNewSubCategory(otp,userId){
 
 exports.getAll = getAll
 exports.addNewMasterCategory = addNewMasterCategory
-exports.addNewMasterCategory = addNewMasterCategory
+exports.addNewSubCategory = addNewSubCategory
