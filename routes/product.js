@@ -1,10 +1,11 @@
 const product = require('../helpers/product')
+
 const jwtMiddleware = require('../middlewares/jwt').checkJWT
 const checkAdminPermissions = require('../middlewares/permissionCheck').checkAdminPermissions
+const manageFiles = require('../middlewares/multer').manageFiles
 
 const validator = require('../utils/validators')
 
-const productModel = require('../models/product')
 
 module.exports = (()=>{
 
@@ -12,7 +13,9 @@ module.exports = (()=>{
 
     routes.get('/',(request, respond)=>{
         try{
-            product.getAll().then((products)=>{
+            let params = request.query!=={}?request.query:undefined
+
+            product.getAll(params).then((products)=>{
                 return respond.status(200).send({success:true,message:'Products successfully fetched',error:null,data:products})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:'Unable to fetch products',error:e,data:null})
@@ -39,20 +42,25 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/add',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.post('/add',jwtMiddleware,checkAdminPermissions,manageFiles,(request, respond)=>{
         try{
+            let images = []
+
+            for (var i = 0; i < request.files.length; i++) {
+                images.push(request.files[i].filename)
+            }
+
             let vendorId=request.body.vendorId
             let masterCategoryId=request.body.masterCategoryId
             let subCategoryId=request.body.subCategoryId
             let name=request.body.name
             let description=request.body.description
-            let images=request.body.images
             let price=request.body.price
             let discount=request.body.discount
             let isAvailable=request.body.isAvailable
             let status=request.body.status
 
-            if(!validator.validateEmptyFields(vendorId,masterCategoryId,subCategoryId,name,description,images,price,discount,isAvailable,status))
+            if(!validator.validateEmptyFields(vendorId,masterCategoryId,subCategoryId,name,description,price,discount,isAvailable,status))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,data:null})
 
             let data={
