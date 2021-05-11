@@ -14,9 +14,9 @@ function sendSms(mobileNumber,content){
                 to: mobileNumber.toString(),
                 message: content
             }
-            axios.post(url,body).then(_ => {return resolve(true)}).catch(error => {return reject(error.message)})
+            axios.post(url,body).then(_ => {return resolve(true)}).catch(error => {return reject(error)})
         }catch(e){
-            return reject(e.message)
+            return reject(e)
         }
     })
 }

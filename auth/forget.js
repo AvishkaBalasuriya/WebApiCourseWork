@@ -9,10 +9,10 @@ module.exports=((otpId,rawPassword)=>{
             let otpDetails = await otpModel.Otp.findOne({uuid:otpId})
 
             if(!otpDetails)
-                return reject({message:null,error:"Invalid OTP id",code:401})
+                return reject({message:null,error:"Invalid OTP id",code:401,data:null})
 
             if(!otpDetails.isActive)
-                return reject({message:null,error:"This OTP is already used",code:401})
+                return reject({message:null,error:"This OTP is already used",code:401,data:null})
             
             let user = await userModel.User.findOne({_id:new userModel.mongoose.Types.ObjectId(otpDetails.user)})
 
@@ -27,12 +27,12 @@ module.exports=((otpId,rawPassword)=>{
                     let payload = jwt.makePayloadWithUser(otpDetails.user)
                     return resolve({'accessToken':jwt.generateJWT(payload)})
 
-                }).catch((e)=>{return reject({message:"Unable complete db transaction",error:e.message,code:500})})
+                }).catch((e)=>{return reject({message:"Unable complete db transaction",error:e.message,code:500,data:null})})
                 
-            }).catch((e)=>{return reject({message:"Unable save user to database",error:e.message,code:500})})
+            }).catch((e)=>{return reject({message:"Unable save user to database",error:e.message,code:500,data:null})})
 
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 })

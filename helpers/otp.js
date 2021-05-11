@@ -18,7 +18,7 @@ function issueAnOtp(contact,contactType){
             }
 
             if(!user)
-                return reject("Contact information is not match with any of our users")
+                return reject({message:null,error:"Contact information is not match with any of our users",code:404,data:null})
     
             let code = codeGenerator.generateOtp()
     
@@ -27,12 +27,12 @@ function issueAnOtp(contact,contactType){
             let messageContent = "Please use below OTP to reset your password. \n "+code.toString()
     
             if(contactType===1){
-                await sms.sendSms(contact,messageContent).catch((error)=>{
-                    return reject(error)
+                await sms.sendSms(contact,messageContent).catch((e)=>{
+                    return reject({message:"Unable to send sms",error:e.message,code:424,data:null})
                 })
             }else{
-                await email.sendEmail(contact,"Verify OTP",messageContent).catch((error)=>{
-                    return reject(error)
+                await email.sendEmail(contact,"Verify OTP",messageContent).catch((e)=>{
+                    return reject({message:"Unable to send email",error:e.message,code:424,data:null})
                 })
             }
     
@@ -42,10 +42,10 @@ function issueAnOtp(contact,contactType){
                 }
         
                 return resolve(data)
-            }).catch((e)=>{return reject("Unable to save otp details")})
+            }).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
     
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
@@ -56,17 +56,17 @@ function verifyAnOtp(otp,userId){
             let otpDetails = await otpModel.Otp.findOne({user:new userModel.mongoose.Types.ObjectId(userId),code:otp})
 
             if(!otpDetails)
-                return reject("Invalid OTP code")
+                return reject({message:null,error:"Invalid OTP code",code:401,data:null})
             
             let user = await userModel.User.findOne({_id:new userModel.mongoose.Types.ObjectId(userId)})
 
             if(otpDetails.isVerified)
-                return reject("This OTP code is already verified")
+                return reject({message:null,error:"This OTP code is already verified",code:401,data:null})
 
             let timeAfterOtpIssued = time.calculateTimeDifferent(otpDetails.createdAt,new Date())
 
             if(timeAfterOtpIssued>=120)
-                return reject("OTP code expired. Please try with new OTP")
+                return reject({message:null,error:"OTP code expired. Please try with new OTP",code:498,data:null})
 
             if(user.status!=1){
                 user.status=1
@@ -97,10 +97,10 @@ function verifyAnOtp(otp,userId){
                 }
             
                 return resolve(data)
-            }).catch((e)=>{return reject("Unable to save otp details")})
+            }).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
             
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
