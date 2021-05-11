@@ -58,8 +58,8 @@ function addOne(data){
 
             let product=new productModel.Product({
                 vendor:new productModel.mongoose.Types.ObjectId(),//data.vendorId),
-                masterCategory:new productModel.mongoose.Types.ObjectId(),//data.masterCategoryId),
-                subCategory:new productModel.mongoose.Types.ObjectId(),//data.subCategoryId),
+                masterCategory:new productModel.mongoose.Types.ObjectId(data.masterCategoryId),
+                subCategory:new productModel.mongoose.Types.ObjectId(data.subCategoryId),
                 name:data.name,
                 description:data.description,
                 price:data.price,
