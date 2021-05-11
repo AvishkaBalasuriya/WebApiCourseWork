@@ -65,6 +65,8 @@ function verifyAnOtp(otp,userId){
 
             let timeAfterOtpIssued = time.calculateTimeDifferent(otpDetails.createdAt,new Date())
 
+            console.log(timeAfterOtpIssued)
+
             if(timeAfterOtpIssued>=120)
                 return reject({message:null,error:"OTP code expired. Please try with new OTP",code:498,data:null})
 
