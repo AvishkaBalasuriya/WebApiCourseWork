@@ -2,10 +2,9 @@ const product = require('../helpers/product')
 
 const jwtMiddleware = require('../middlewares/jwt').checkJWT
 const checkAdminPermissions = require('../middlewares/permissionCheck').checkAdminPermissions
-const manageFiles = require('../middlewares/multer').manageFiles
+const upload = require('../middlewares/multer').uploadMulter
 
 const validator = require('../utils/validators')
-
 
 module.exports = (()=>{
 
@@ -42,7 +41,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/add',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.post('/add',jwtMiddleware,checkAdminPermissions,upload.array('images', 4),(request, respond)=>{
         try{
             let images = []
 
