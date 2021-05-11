@@ -21,7 +21,7 @@ function addNewMasterCategory(name){
             })
 
             masterCategory.save().then((res)=>{
-                return resolve(data)
+                return resolve({masterCategoryId:masterCategory._id})
             }).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
@@ -32,9 +32,9 @@ function addNewMasterCategory(name){
 function addNewSubCategory(masterCategoryId,SubCategoryName){
     return new Promise(async(resolve,reject)=>{
         try{
-            let masterCategory = await new masterCategoryModel.find({_id:new masterCategoryModel.mongoose.Types.ObjectId(masterCategoryId)})
+            let masterCategory = await masterCategoryModel.MasterCategory.findOne({_id:new masterCategoryModel.mongoose.Types.ObjectId(masterCategoryId)})
 
-            if(!MasterCategory)
+            if(!masterCategory)
                 return reject({message:null,error:"Invalid master category ID",code:404,data:null})
 
             let subCategory = new subCategoryModel.SubCategory({
@@ -42,8 +42,10 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
             })
 
             subCategory.save().then((res)=>{
-                masterCategory.subCategory.push(subCategory._id).then((res)=>{
-                    return resolve(data)
+                console.log(masterCategory)
+                masterCategory.subCategory.push(subCategory._id)
+                masterCategory.save().then((res)=>{
+                    return resolve({subCategoryId:subCategory._id})
                 }).catch((e)=>{
                     return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
                 })
