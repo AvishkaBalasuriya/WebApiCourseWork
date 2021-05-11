@@ -1,5 +1,4 @@
 const masterCategoryModel = require('../models/masterCategory')
-const masterCategoryModel = require('../models/masterCategory')
 const subCategoryModel = require('../models/subCategory')
 
 function getAll(){
