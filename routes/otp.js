@@ -1,4 +1,3 @@
-
 const otp = require('../helpers/otp')
 const validator = require('../utils/validators')
 

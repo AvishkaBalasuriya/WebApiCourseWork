@@ -1,3 +1,5 @@
+const otp = require('../helpers/otp')
+
 const userModel = require('../models/user')
 
 const hasher = require('../utils/hasher')
