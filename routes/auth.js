@@ -26,7 +26,7 @@ module.exports = (()=>{
             login(email,password).then((result)=>{
                 return respond.status(200).send({success:true,message:'Successfully authenticated',error:null,code:200,data:result})
             }).catch((e)=>{
-                return respond.status(200).send({success:false,message:'Login failed',error:e.error,code:e.code,data:null})
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -75,10 +75,10 @@ module.exports = (()=>{
 
                     return respond.status(200).send({success:true,message:'User successfully registered and an OTP code sent to the user email',error:null,code:200,data:data})
                 }).catch((e)=>{
-                    return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:null})
+                    return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
                 })
             }).catch((e)=>{
-                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:null})
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -121,7 +121,7 @@ module.exports = (()=>{
             register(user).then((result)=>{
                 return respond.status(200).send({success:true,message:'Admin user successfully registered',error:null,code:200,data:data})
             }).catch((e)=>{
-                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:null})
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -146,7 +146,7 @@ module.exports = (()=>{
             forget(otpId,password).then((result)=>{
                 return respond.status(200).send({success:true,message:'Password successfully changed',error:null,code:200,data:result})
             }).catch((e)=>{
-                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:null})
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})

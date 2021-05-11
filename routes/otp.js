@@ -20,7 +20,7 @@ module.exports = (()=>{
             otp.issueAnOtp(contact,contactType).then((result)=>{
                 return respond.status(200).send({success:true,message:'OTP code successfully sent to '+contact,error:null,data:result})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -41,7 +41,7 @@ module.exports = (()=>{
             otp.verifyAnOtp(otpCode,userId).then((result)=>{
                 return respond.status(200).send({success:true,message:"OTP code successfully verified",error:null,data:result})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
