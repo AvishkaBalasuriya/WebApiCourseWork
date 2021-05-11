@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+ const mongoose = require('mongoose')
 
 const masterCategorySchema = require('../schema/masterCategory').masterCategorySchema
 
