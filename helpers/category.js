@@ -1,4 +1,5 @@
 const masterCategoryModel = require('../models/masterCategory')
+const masterCategoryModel = require('../models/masterCategory')
 const subCategoryModel = require('../models/subCategory')
 
 function getAll(){
@@ -38,11 +39,11 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
                 return reject({message:null,error:"Invalid master category ID",code:404,data:null})
 
             let subCategory = new subCategoryModel.SubCategory({
+                masterCategoryId:masterCategory._id,
                 name:SubCategoryName
             })
 
             subCategory.save().then((res)=>{
-                console.log(masterCategory)
                 masterCategory.subCategory.push(subCategory._id)
                 masterCategory.save().then((res)=>{
                     return resolve({subCategoryId:subCategory._id})
@@ -57,6 +58,46 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
     })
 }
 
+function deleteSubCategory(subCategoryId){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            let subCategory = await subCategoryModel.SubCategory.deleteOne({_id:new subCategoryModel.mongoose.Types.ObjectId(subCategoryId)})
+
+            console.log(subCategory)
+
+            if(!subCategory)
+                return reject({message:null,error:"Invalid sub category ID",code:404,data:null})
+
+            return resolve(subCategoryId)
+            
+        }catch(e){
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
+        }
+    })
+}
+
+function deleteMasterCategory(masterCategoryId){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            await masterCategoryModel.MasterCategory.deleteOne({_id:new masterCategoryModel.mongoose.Types.ObjectId(masterCategoryId)}).catch((e)=>{
+                reject({message:"Unable to delete master category",error:e.message,code:500,data:null})
+            })
+
+            await subCategoryModel.SubCategory.deleteMany({masterCategoryId:masterCategoryId}).catch((e)=>{
+                return reject({message:"Unable to delete sub category",error:e.message,code:500,data:null})
+            })
+
+            return resolve(subCategoryId)
+            
+        }catch(e){
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
+        }
+    })
+}
+
+
 exports.getAll = getAll
 exports.addNewMasterCategory = addNewMasterCategory
 exports.addNewSubCategory = addNewSubCategory
+exports.deleteSubCategory = deleteSubCategory
+exports.deleteMasterCategory = deleteMasterCategory
