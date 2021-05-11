@@ -6,7 +6,8 @@ const masterCategorySchema = new mongoose.Schema({
     },
     subCategory:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref: 'SubCategory'
+        ref: 'SubCategory',
+        default:[]
     }],
     createdAt: {
         type:Date,

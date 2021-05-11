@@ -2,7 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const config = require('config')
-let mongoose = require('mongoose')
+const mongoose = require('mongoose')
+const path = require('path')
 
 const port = process.env.PORT || config.get('app.port') 
 
@@ -16,11 +17,16 @@ const vendorRoute = require('./routes/vendor')
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(express.static("public"))
 
 app.use('/api/v1/auth',authRoute)
 app.use('/api/v1/otp',otpRoute)
 app.use('/api/v1/products',productRoute)
 app.use('/api/v1/vendor',vendorRoute)
+
+app.get("/admin", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"))
+})
 
 app.listen(port,()=>{
     console.log("Running on port: "+port)
