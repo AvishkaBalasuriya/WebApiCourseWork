@@ -42,7 +42,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/add',jwtMiddleware,checkAdminPermissions,manageFiles,(request, respond)=>{
+    routes.post('/add',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
             let images = []
 
