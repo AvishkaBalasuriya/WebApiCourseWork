@@ -4,10 +4,17 @@ const cors = require('cors')
 const config = require('config')
 const mongoose = require('mongoose')
 const path = require('path')
+const admin = require('firebase-admin')
 
 const port = process.env.PORT || config.get('app.port') 
+const serviceAccount = require('./config/firebaseStorage.json')
 
 const app = express()
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: 'gs://webapi-3e0ee.appspot.com'
+})
 
 const authRoute = require('./routes/auth')
 const otpRoute = require('./routes/otp')

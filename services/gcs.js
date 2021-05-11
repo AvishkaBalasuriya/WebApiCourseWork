@@ -1,15 +1,8 @@
 const admin = require('firebase-admin')
 const uuid = require('uuid')
 
-const serviceAccount = require('../config/firebaseStorage.json')
-
 class GCS{
     constructor(){
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        storageBucket: 'gs://webapi-3e0ee.appspot.com'
-      })
-
       this.bucket = admin.storage().bucket()
     }
 

@@ -1,4 +1,8 @@
+const gcs = require('../services/gcs')
+
 const vendorModel = require('../models/vendor')
+
+const gcsRef = new gcs.GCS()
 
 function getAll(){
     return new Promise(async(resolve,reject)=>{
@@ -15,15 +19,18 @@ function getAll(){
 function addNewVendor(data){
     return new Promise(async(resolve,reject)=>{
         try{
-            
-            let vendor = new masterCategoryModel.MasterCategory({
+            let logoUrl = await gcsRef.uploadImage(data.logo).catch((e)=>{return null})
+
+            let vendor = new vendorModel.Vendor({
                 name:data.name,
                 country:data.country,
-                logo:
+                logo:logoUrl
             })
 
-            masterCategory.save().then((res)=>{
-                return resolve({masterCategoryId:masterCategory._id})
+            logoUrl===null?delete vendor[logo]:null
+
+            vendor.save().then((res)=>{
+                return resolve({vendorId:vendor._id})
             }).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
@@ -31,10 +38,10 @@ function addNewVendor(data){
     })
 }
 
-function addNewSubCategory(masterCategoryId,SubCategoryName){
+function deleteVendor(vendorId){
     return new Promise(async(resolve,reject)=>{
         try{
-            let masterCategory = await masterCategoryModel.MasterCategory.findOne({_id:new masterCategoryModel.mongoose.Types.ObjectId(masterCategoryId)})
+            let masterCategory = await vendorModel.Vendor.findOne({_id:new vendorModel.mongoose.Types.ObjectId(masterCategoryId)})
 
             if(!masterCategory)
                 return reject({message:null,error:"Invalid master category ID",code:404,data:null})
@@ -60,5 +67,4 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
 }
 
 exports.getAll = getAll
-exports.addNewMasterCategory = addNewMasterCategory
-exports.addNewSubCategory = addNewSubCategory
+exports.addNewVendor = addNewVendor
