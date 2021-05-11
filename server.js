@@ -25,7 +25,7 @@ app.use('/api/v1/products',productRoute)
 app.use('/api/v1/vendor',vendorRoute)
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"))
+    res.sendFile(path.join(__dirname, "app/public", "index.html"))
 })
 
 app.listen(port,()=>{
