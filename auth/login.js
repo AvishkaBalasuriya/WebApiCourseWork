@@ -21,11 +21,10 @@ module.exports=((email,password)=>{
                 }).catch((error)=>{
                     return respond.status(200).send({success:false,message:'Unable to issue an OTP',error:error,data:null,data:null})
                 })
+            }else{
+                let payload = jwt.makePayloadWithUser(user)
+                return resolve({'accessToken':jwt.generateJWT(payload)})
             }
-
-            let payload = jwt.makePayloadWithUser(user)
-
-            return resolve({'accessToken':jwt.generateJWT(payload)})
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
