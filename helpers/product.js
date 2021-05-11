@@ -1,13 +1,33 @@
+const gcs = require('../services/gcs')
+
 const productModel = require('../models/product')
 const productImageModel = require('../models/productImage')
 
-function getAll(){
+const gcsRef = new gcs.GCS()
+
+function getAll(params=undefined){
     return new Promise(async(resolve,reject)=>{
         try{
-            // await productModel.Product.find().lean().exec(function (err, products) {
-            //     let productsImages = await productImageModel.ProductImage.find().populate('product')
-            //     return resolve(products)
-            // })
+            let query = {}
+
+            if(params){
+                let filters = {$or:[]}
+                for (const [key, value] of Object.entries(params)) {
+                    if(key==="keyword"){
+                        filters['$or'].push({ $text: { $search: value } })
+                        continue
+                    }
+                    filter = {}
+                    filter[key]=value
+                    filters['$or'].push(filter)
+                }
+                query=filters
+            }
+
+            let products = await productModel.Product.find(query).populate('images','imageUrl')
+
+            return resolve(products)
+
         }catch(e){
             return reject(e.message)
         }
@@ -18,14 +38,10 @@ function getOne(productId){
     return new Promise(async(resolve,reject)=>{
         try{
         
-            let product = await productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(productId)})
+            let product = await productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(productId)}).populate('images','imageUrl')
 
             if(!product)
                 return reject("Unable to find product for provided product id")
-
-            let productImages = await productImageModel.ProductImage.find({Product:product._id})
-
-            product.images = productImages
 
             return resolve(product)
 
@@ -38,11 +54,12 @@ function getOne(productId){
 function addOne(data){
     return new Promise(async(resolve,reject)=>{
         try{
+            let imageObj = []
 
-            product = new productModel.Product({
-                vendor:new productModel.mongoose.Types.ObjectId(data.vendorId),
-                masterCategory:new productModel.mongoose.Types.ObjectId(data.masterCategoryId),
-                subCategory:new productModel.mongoose.Types.ObjectId(data.subCategoryId),
+            let product=new productModel.Product({
+                vendor:new productModel.mongoose.Types.ObjectId(),//data.vendorId),
+                masterCategory:new productModel.mongoose.Types.ObjectId(),//data.masterCategoryId),
+                subCategory:new productModel.mongoose.Types.ObjectId(),//data.subCategoryId),
                 name:data.name,
                 description:data.description,
                 price:data.price,
@@ -51,18 +68,26 @@ function addOne(data){
                 status:data.status
             })
 
-            product.save().then((res)=>{
-                data.images.forEach(async(image) => {
+            await new Promise(async(resolve, reject) => {
+                for(const image of data.images){
+                    let downloadUrl = await gcsRef.uploadImage(image).catch((e)=>{})
                     let productImage = new productImageModel.ProductImage({
                         product:product._id,
-                        imageUrl:image,
-        
+                        imageUrl:downloadUrl,
                     })
                     await productImage.save()
-                })
-                return resolve(product._id)
+
+                    imageObj.push(productImage)
+                }
+                return resolve(true)
+            })
+
+            product.images = imageObj
+
+            product.save().then((res)=>{
+                return resolve("Product successfully saved")
             }).catch((e)=>{
-                return reject("Unable to add product to the database")
+                return reject(e.message)
             })
 
         }catch(e){
