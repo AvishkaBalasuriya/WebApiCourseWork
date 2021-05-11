@@ -60,6 +60,7 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
 function deleteSubCategory(subCategoryId){
     return new Promise(async(resolve,reject)=>{
         try{
+            console.log(subCategoryId)
             let subCategory = await subCategoryModel.SubCategory.deleteOne({_id:new subCategoryModel.mongoose.Types.ObjectId(subCategoryId)})
 
             console.log(subCategory)
@@ -86,7 +87,7 @@ function deleteMasterCategory(masterCategoryId){
                 return reject({message:"Unable to delete sub category",error:e.message,code:500,data:null})
             })
 
-            return resolve(subCategoryId)
+            return resolve(masterCategoryId)
             
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
