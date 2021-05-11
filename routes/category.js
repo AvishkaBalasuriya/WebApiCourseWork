@@ -23,12 +23,12 @@ module.exports = (()=>{
 
     routes.post('/add/masterCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
-            let masterCategoryName = request.body.masterCategoryName
+            let name = request.body.name
 
-            if(!validator.validateEmptyFields(masterCategoryName))
+            if(!validator.validateEmptyFields(name))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,data:null})
 
-            category.addNewMasterCategory(masterCategoryName).then((products)=>{
+            category.addNewMasterCategory(name).then((products)=>{
                 return respond.status(200).send({success:true,message:'Master category successfully added',error:null,code:200,data:products})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
@@ -41,12 +41,12 @@ module.exports = (()=>{
     routes.post('/add/subCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
             let masterCategoryId = request.body.masterCategoryId
-            let subCategoryName = request.body.subCategoryName
+            let name = request.body.name
 
-            if(!validator.validateEmptyFields(subCategoryName))
+            if(!validator.validateEmptyFields(name))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,data:null})
 
-            category.addNewSubCategory(masterCategoryId,subCategoryName).then((products)=>{
+            category.addNewSubCategory(masterCategoryId,name).then((products)=>{
                 return respond.status(200).send({success:true,message:'Sub category successfully added',error:null,code:200,data:products})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
