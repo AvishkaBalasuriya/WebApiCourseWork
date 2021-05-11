@@ -17,7 +17,7 @@ module.exports = (()=>{
             product.getAll(params).then((products)=>{
                 return respond.status(200).send({success:true,message:'Products successfully fetched',error:null,code:200,data:products})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -34,7 +34,7 @@ module.exports = (()=>{
             product.getOne(productId).then((products)=>{
                 return respond.status(200).send({success:true,message:'Product successfully fetched',error:null,code:200,data:products})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -78,7 +78,7 @@ module.exports = (()=>{
             product.addOne(data).then((result)=>{
                 return respond.status(200).send({success:true,message:'Product successfully added',error:null,code:200,data:result})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -119,7 +119,7 @@ module.exports = (()=>{
             product.updateOne(productId,data).then((result)=>{
                 return respond.status(200).send({success:true,message:'Product successfully updated',error:null,code:200,data:result})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -131,7 +131,7 @@ module.exports = (()=>{
             product.deleteAll().then((result)=>{
                 return respond.status(200).send({success:true,message:'All Products successfully deleted',error:null,code:200,data:result})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
@@ -148,7 +148,7 @@ module.exports = (()=>{
             product.deleteOne(productId).then((result)=>{
                 return respond.status(200).send({success:true,message:'Product successfully deleted',error:null,code:200,data:result})
             }).catch((e)=>{
-                return respond.status(200).send(e)
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
         }catch(e){
             return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
