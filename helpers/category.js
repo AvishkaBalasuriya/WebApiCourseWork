@@ -8,7 +8,7 @@ function getAll(){
         
             resolve(categories)
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
@@ -22,9 +22,9 @@ function addNewMasterCategory(name){
 
             masterCategory.save().then((res)=>{
                 return resolve(data)
-            }).catch((e)=>{return reject("Unable to save master category")})
+            }).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
@@ -35,7 +35,7 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
             let masterCategory = await new masterCategoryModel.find({_id:new masterCategoryModel.mongoose.Types.ObjectId(masterCategoryId)})
 
             if(!MasterCategory)
-                return reject("Invalid master category ID")
+                return reject({message:null,error:"Invalid master category ID",code:404,data:null})
 
             let subCategory = new subCategoryModel.SubCategory({
                 name:SubCategoryName
@@ -45,12 +45,12 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
                 masterCategory.subCategory.push(subCategory._id).then((res)=>{
                     return resolve(data)
                 }).catch((e)=>{
-                    return reject("Unable to complete database transaction")
+                    return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
                 })
-            }).catch((e)=>{return reject("Unable to save master category")})
+            }).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
             
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }

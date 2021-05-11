@@ -29,7 +29,7 @@ function getAll(params=undefined){
             return resolve(products)
 
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
@@ -41,12 +41,12 @@ function getOne(productId){
             let product = await productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(productId)}).populate('images','imageUrl')
 
             if(!product)
-                return reject("Unable to find product for provided product id")
+                return reject({message:null,error:"Unable to find product for provided product id",code:404,data:null})
 
             return resolve(product)
 
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
@@ -87,11 +87,11 @@ function addOne(data){
             product.save().then((res)=>{
                 return resolve("Product successfully saved")
             }).catch((e)=>{
-                return reject(e.message)
+                return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
             })
 
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
@@ -103,7 +103,7 @@ function updateOne(productId,data){
             let product = await productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(productId)})
 
             if(!product)
-                return reject("Unable to find product for provided product id")
+                return reject({message:null,error:"Unable to find product for provided product id",code:404,data:null})
 
             product.vendor=new productModel.mongoose.Types.ObjectId(data.vendorId),
             product.masterCategory=new productModel.mongoose.Types.ObjectId(data.masterCategoryId),
@@ -115,10 +115,10 @@ function updateOne(productId,data){
             product.isAvailable=data.isAvailable,
             product.status=data.status
         
-            product.save().then(res=>{return resolve(products)}).catch((e)=>{return reject("Unable to update product")})
+            product.save().then(res=>{return resolve(products)}).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
             
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500})
         }
     })
 }
@@ -127,10 +127,10 @@ function deleteAll(){
     return new Promise(async(resolve,reject)=>{
         try{
 
-            product.delete().then(res=>{return resolve(true)}).catch((e)=>{return reject("Unable to delete all products in the database")})
+            product.delete().then(res=>{return resolve(true)}).catch((e)=>{return reject({message:"Unable to delete",error:e.message,code:500,data:null})})
 
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
@@ -139,10 +139,10 @@ function deleteOne(productId){
     return new Promise(async(resolve,reject)=>{
         try{
         
-            product.delete({_id:new productModel.mongoose.Types.ObjectId(productId)}).then(res=>{return resolve(true)}).catch((e)=>{return reject("Unable to delete product in the database")})
+            product.delete({_id:new productModel.mongoose.Types.ObjectId(productId)}).then(res=>{return resolve(true)}).catch((e)=>{return reject({message:"Unable to delete",error:e.message,code:500,data:null})})
 
         }catch(e){
-            return reject(e.message)
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
     })
 }
