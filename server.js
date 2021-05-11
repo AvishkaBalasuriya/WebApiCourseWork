@@ -24,7 +24,7 @@ app.use('/api/v1/otp',otpRoute)
 app.use('/api/v1/products',productRoute)
 app.use('/api/v1/vendor',vendorRoute)
 
-app.get("/admin", (req, res) => {
+app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"))
 })
 
