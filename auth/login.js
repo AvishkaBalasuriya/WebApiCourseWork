@@ -9,12 +9,12 @@ module.exports=((email,password)=>{
             let user = await userModel.User.findOne({email:email})
 
             if(!user)
-                return reject('User with provided email not exists')
+                return reject({message:null,error:'User with provided email not exists',code:401})
             if(!(user.password===hasher.hash(password))){
-                return reject('Invalid email or password')
+                return reject({message:null,error:'Invalid email or password',code:401})
             }
             if(user.status===false){
-                return reject('User account not activate yet. Please verify your email address. Email verification code sent to your email address.')
+                return reject({message:"Account not veriied",error:'User account not activate yet. Please verify your email address. Email verification code sent to your email address.',code:503})
             }
 
             let payload = jwt.makePayloadWithUser(user)
