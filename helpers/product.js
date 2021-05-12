@@ -21,7 +21,8 @@ function getAll(params=undefined){
                     filter[key]=value
                     filters['$or'].push(filter)
                 }
-                query=filters['$or']===[]?{}:filters
+                query=filters['$or'].length===0?{}:filters
+                console.log(query)
             }
 
             let products = await productModel.Product.find(query).populate('images','imageUrl')
