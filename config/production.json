@@ -9,8 +9,8 @@
         "password":"webApi2021"
     },
     "sms":{
-        "userId":"13093",
-        "apiKey":"pK7FlCMj4gUU0CvqdmVd",
+        "userId":"13396",
+        "apiKey":"d5m3SCKPrzzSDXAOLX5C",
         "senderId":"NotifyDEMO",
         "url":"https://app.notify.lk/api/v1/send"
     },

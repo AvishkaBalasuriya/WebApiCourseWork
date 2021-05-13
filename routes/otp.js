@@ -14,10 +14,10 @@ module.exports = (()=>{
 
             let contactType = await validator.validateContactType(contact)
 
-            if(contactType===-1)
+            if(contactType.status===-1)
                 return respond.status(200).send({success:false,message:'Provided contact is not valid',error:null,code:400,data:null})
             
-            otp.issueAnOtp(contact,contactType).then((result)=>{
+            otp.issueAnOtp(contactType.data,contactType.status).then((result)=>{
                 return respond.status(200).send({success:true,message:'OTP code successfully sent to '+contact,error:null,data:result})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})

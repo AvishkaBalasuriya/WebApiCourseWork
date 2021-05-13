@@ -59,11 +59,11 @@ function validateEmail(contact){
 async function validateContactType(contact){
     return new Promise((resolve,reject)=>{
         validateMobileNumber(contact,"LK").then((res)=>{
-            resolve(1)
+            resolve({status:1,data:res.data})
         }).catch((e)=>{
             if(validateEmail(contact))
-                resolve(0)
-            resolve(-1)
+                resolve({status:0,data:contact})
+            resolve({status:-1})
         })
     })
 }
