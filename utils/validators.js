@@ -44,7 +44,7 @@ function validateMobileNumber(contact,countryCode){
                 return reject({status:false,message:null,error:response.data.error.info,code:400,data:null})
             if(response.data.valid===false)
                 return reject({status:false,message:null,error:"Invalid mobile number format",code:400,data:null})
-            return resolve({status:true,data:response.data.number})
+            return resolve({status:true,data:response.data.international_format.slice(1,response.data.international_format.length)})
         }).catch((e)=>{
             return reject({status:false,message:e.message,error:null,code:424,data:null})
         })
