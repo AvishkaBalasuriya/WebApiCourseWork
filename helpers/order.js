@@ -70,11 +70,11 @@ function addOne(data){
             })
 
             await new Promise(async(resolve, reject) => {
-                for(const cartItem of data.cart){
+                for(const cartProductData of data.cart){
                     let cartItemData = new cartItemModel.CartItem({
                         cart: new cartModel.mongoose.Types.ObjectId(cart._id),
-                        product:new cartItemModel.mongoose.Types.ObjectId(cartItem.productId),
-                        qty:cartItem.qty,
+                        product:new cartItemModel.mongoose.Types.ObjectId(cartProductData.productId),
+                        qty:cartProductData.qty,
                     })
                     await cartItemData.save()
 

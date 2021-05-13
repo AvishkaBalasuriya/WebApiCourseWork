@@ -15,8 +15,11 @@
         "url":"https://app.notify.lk/api/v1/send"
     },
     "email":{
-        "user":"avishkabalasuriya980330@gmail.com",
-        "pass":"robmvipmsvphhwxm"
+        "email":"avishkabalasuriya980330@gmail.com",
+        "name":"ShopMore",
+        "replyEmail":"avishkabalasuriya980330@gmail.com",
+        "token":"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",
+        "url":"https://api.sendgrid.com/v3/mail/send"
     },
     "accessTokens":{
         "tokens":["UQMP5plu9ruPcFVswINeLNcyHrDrYEUa","wX2PRd6AhwsKf6OgnqWRVJu6i6jB6yTT","rPE01rd8SEaJSdSsoxjrWZxd7B7ejTqd","YjFOMolrji5kr8M6iicdUsyIPa87aQ3B"],

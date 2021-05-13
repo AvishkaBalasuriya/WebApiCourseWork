@@ -62,16 +62,13 @@ module.exports = (()=>{
     
             if(!validator.validatePassword(data.password))
                 return respond.status(200).send({success:false,message:'Password mot matching security criteria',error:null,code:400,data:null})
-    
-            let user = new userModel.User({email:data.email,rawPassword:data.password,firstName:data.firstName,
-                lastName:data.lastName,mobileNumber:data.mobileNumber,address:data.address,isSocial:data.isSocial,type:data.type})
             
-            register(user).then((result)=>{
-                otp.issueAnOtp(email,0).then((result)=>{
-                    delete data[password]
-                    delete data[passwordConfirm]
-                    delete data[type]
-                    data[userId]=result.userId
+            register(data).then((result)=>{
+                otp.issueAnOtp(data.email,0).then((result)=>{
+                    delete data["password"]
+                    delete data["passwordConfirm"]
+                    delete data["type"]
+                    data["userId"]=result.userId
 
                     return respond.status(200).send({success:true,message:'User successfully registered and an OTP code sent to the user email',error:null,code:200,data:data})
                 }).catch((e)=>{
@@ -114,11 +111,8 @@ module.exports = (()=>{
     
             if(!validator.validatePassword(data.password))
                 return respond.status(200).send({success:false,message:'Password mot matching security criteria',error:null,code:400,data:null})
-    
-            let user = new userModel.User({email:data.email,rawPassword:data.password,firstName:data.firstName,
-                lastName:data.lastName,mobileNumber:data.mobileNumber,address:data.address,isSocial:data.isSocial,type:data.type})
             
-            register(user).then((result)=>{
+            register(data).then((result)=>{
                 return respond.status(200).send({success:true,message:'Admin user successfully registered',error:null,code:200,data:data})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})

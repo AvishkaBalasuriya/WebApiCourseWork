@@ -69,7 +69,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/',jwtMiddleware,checkAdminPermissions,upload.array('images', 5),(request, respond)=>{
+    routes.post('/',jwtMiddleware,(request, respond)=>{
         try{
             let user=request.body.user
             let cart=request.body.cart
@@ -96,7 +96,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.put('/',jwtMiddleware,checkAdminPermissions,upload.array('images', 5),(request, respond)=>{
+    routes.put('/',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
             let order=request.body.order
             let status=request.body.status

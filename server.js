@@ -4,23 +4,19 @@ const cors = require('cors')
 const config = require('config')
 const mongoose = require('mongoose')
 const path = require('path')
-const admin = require('firebase-admin')
+
+const firebaseService = require("./services/firebase")
 
 const port = process.env.PORT || config.get('app.port') 
-const serviceAccount = require('./config/firebaseStorage.json')
 
 const app = express()
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'gs://webapi-3e0ee.appspot.com'
-})
 
 const authRoute = require('./routes/auth')
 const otpRoute = require('./routes/otp')
 const productRoute = require('./routes/product')
 const vendorRoute = require('./routes/vendor')
 const categoryRoute = require('./routes/category')
+const orderRoute = require('./routes/order')
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -32,13 +28,14 @@ app.use('/api/v1/otp',otpRoute)
 app.use('/api/v1/products',productRoute)
 app.use('/api/v1/vendor',vendorRoute)
 app.use('/api/v1/category',categoryRoute)
+app.use('/api/v1/order',orderRoute)
 
 app.use('/',express.static(path.join(__dirname, '/public/index.html')))
 app.all('*',(req,res)=>{
   res.sendFile('index.html',{ root: path.join(__dirname, '/public/')})
 })
 
-app.listen(port,()=>{
+app.listen(port,async()=>{
     console.log("Running on port: "+port)
     try{
         console.log(`mongodb+srv://${config.get("mongodb.user")}:${config.get("mongodb.password")}@${config.get("mongodb.host")}/${config.get("mongodb.database")}?retryWrites=true&w=majority`)
