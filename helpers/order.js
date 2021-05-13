@@ -34,7 +34,11 @@ function getAllForUser(userId){
                     model: 'CartItem',
                     populate: {
                         path: 'product',
-                        model: 'Product'
+                        model: 'Product',
+                        populate: {
+                            path: 'images',
+                            model: 'ProductImage'
+                        },
                     },
                 },
             }])
