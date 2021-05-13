@@ -98,14 +98,15 @@ module.exports = (()=>{
 
     routes.put('/',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
-            let order=request.body.order
+
+            let orderId=request.body.order
             let status=request.body.status
 
-            if(!validator.validateEmptyFields(order,status))
+            if(!validator.validateEmptyFields(orderId,status))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,code:400,data:null})
 
             let data={
-                order:order,
+                order:orderId,
                 status:status
             }
 

@@ -41,24 +41,27 @@ function addNewVendor(data){
 function deleteVendor(vendorId){
     return new Promise(async(resolve,reject)=>{
         try{
-            let masterCategory = await vendorModel.Vendor.findOne({_id:new vendorModel.mongoose.Types.ObjectId(masterCategoryId)})
+            let vendor = await vendorModel.Vendor.findOne({_id:new vendorModel.mongoose.Types.ObjectId(vendorId)})
 
-            if(!masterCategory)
-                return reject({message:null,error:"Invalid master category ID",code:404,data:null})
+            if(!vendor)
+                return reject({message:null,error:"Invalid vendor ID",code:404,data:null})
 
-            let subCategory = new subCategoryModel.SubCategory({
-                name:SubCategoryName
-            })
+            await vendor.delete()
 
-            subCategory.save().then((res)=>{
-                console.log(masterCategory)
-                masterCategory.subCategory.push(subCategory._id)
-                masterCategory.save().then((res)=>{
-                    return resolve({subCategoryId:subCategory._id})
-                }).catch((e)=>{
-                    return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
-                })
-            }).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
+            return resolve(vendorId)
+            
+        }catch(e){
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
+        }
+    })
+}
+
+function deleteVendors(){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            await vendorModel.Vendor.deleteMany()
+
+            return resolve(true)
             
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
@@ -68,3 +71,5 @@ function deleteVendor(vendorId){
 
 exports.getAll = getAll
 exports.addNewVendor = addNewVendor
+exports.deleteVendor = deleteVendor
+exports.deleteVendors = deleteVendors
