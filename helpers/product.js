@@ -123,8 +123,10 @@ function updateOne(data){
 
             await new Promise(async(resolve, reject) => {
                 for(const deletedImage of data.deletedImages){
+                    console.log(deletedImage)
                     await productImageModel.ProductImage.deleteOne({_id:new productImageModel.mongoose.Types.ObjectId(deletedImage)})
                 }
+                console.log(images)
                 for(const image of data.images){
                     let downloadUrl = await gcsRef.uploadImage(image).catch((e)=>{})
                     let productImage = new productImageModel.ProductImage({
