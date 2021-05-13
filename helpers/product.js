@@ -55,6 +55,10 @@ function getOne(productId){
 function addOne(data){
     return new Promise(async(resolve,reject)=>{
         try{
+            let isProductExists = await productModel.Product.count({name:data.name})
+            if(isProductExists!=0)
+                return reject({message:null,error:"Product already exists",code:409,data:null})
+
             let imageObj = []
 
             let product=new productModel.Product({

@@ -1,3 +1,6 @@
+const axios = require('axios')
+const config = require('config')
+
 function validatePassword(password){
     const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/gm
     return password.match(pattern)!=null
@@ -30,9 +33,22 @@ function isNumber(...args){
     return is_valid
 }
 
-function validateMobileNumber(contact){
-    const pattern = /^\d{1,3}\d{8}$/gm
-    return contact.match(pattern) != null?1:0
+function validateMobileNumber(contact,countryCode){
+    return new Promise((resolve,reject)=>{
+        let configApi = {
+            method: 'GET',
+            url: `${config.get("mobileValidation.url")}?access_key=${config.get("mobileValidation.apiKey")}&number=${contact}&country_code=${countryCode}`
+        }
+        axios(configApi).then((response)=>{
+            if(response.data.success===false)
+                return reject({status:false,message:null,error:response.data.error.info,code:400,data:null})
+            if(response.data.valid===false)
+                return reject({status:false,message:null,error:"Invalid mobile number format",code:400,data:null})
+            return resolve({status:true,data:response.data.number})
+        }).catch((e)=>{
+            return reject({status:false,message:e.message,error:null,code:424,data:null})
+        })
+    })
 }
 
 function validateEmail(contact){

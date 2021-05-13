@@ -41,8 +41,12 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/',jwtMiddleware,checkAdminPermissions,upload.array('images', 5),(request, respond)=>{
+    routes.post('/',jwtMiddleware,checkAdminPermissions,upload.array('images'),(request, respond)=>{
         try{
+            if(request.fileValidationError){
+                return respond.status(200).send({success:false,message:request.fileValidationError,error:null,code:400,data:null})
+            }
+
             let images = []
 
             for (var i = 0; i < request.files.length; i++) {
