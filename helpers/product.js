@@ -106,7 +106,7 @@ function updateOne(data){
         try{
             let imageObj = []
 
-            let product=await new productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(data.productId)})
+            let product=await productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(data.productId)})
 
             if(!product)
                 return reject({message:null,error:'Unable to find product',code:404,data:null})
@@ -123,7 +123,7 @@ function updateOne(data){
 
             await new Promise(async(resolve, reject) => {
                 for(const deletedImage of data.deletedImages){
-                    await productImageModel.ProductImage.deleteOne({_id:deletedImage})
+                    await productImageModel.ProductImage.deleteOne({_id:new productImageModel.mongoose.Types.ObjectId(deletedImage)})
                 }
                 for(const image of data.images){
                     let downloadUrl = await gcsRef.uploadImage(image).catch((e)=>{})
