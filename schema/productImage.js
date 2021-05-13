@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const productImageSchema = new mongoose.Schema({
+    product:{
+        type:mongoose.Types.ObjectId,
+        ref:'Product'
+    },
     imageUrl: String,
     createdAt: {
         type:Date,

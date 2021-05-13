@@ -24,7 +24,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.get('/get/:id',(request, respond)=>{
+    routes.get('/:id',(request, respond)=>{
         try{
             let productId = request.params.id
 
@@ -41,7 +41,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/add',jwtMiddleware,checkAdminPermissions,upload.array('images', 4),(request, respond)=>{
+    routes.post('/',jwtMiddleware,checkAdminPermissions,upload.array('images', 5),(request, respond)=>{
         try{
             let images = []
 
@@ -85,21 +85,28 @@ module.exports = (()=>{
         }
     })
 
-    routes.put('/update',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.put('/',jwtMiddleware,checkAdminPermissions,upload.array('images', 5),(request, respond)=>{
         try{
+            let updatedImages = []
+
+            for (var i = 0; i < request.files.length; i++) {
+                updatedImages.push(request.files[i].filename)
+            }
+
             let productId=request.body.productId
             let vendorId=request.body.vendorId
             let masterCategoryId=request.body.masterCategoryId
             let subCategoryId=request.body.subCategoryId
             let name=request.body.name
             let description=request.body.description
-            let images=request.body.images
+            let images=updatedImages
+            let deletedImages=request.body.deletedImages
             let price=request.body.price
             let discount=request.body.discount
             let isAvailable=request.body.isAvailable
             let status=request.body.status
 
-            if(!validator.validateEmptyFields(productId,vendorId,masterCategoryId,subCategoryId,name,description,images,price,discount,isAvailable,status))
+            if(!validator.validateEmptyFields(productId,vendorId,masterCategoryId,subCategoryId,name,description,price,discount,isAvailable,status))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,code:400,data:null})
 
             let data={
@@ -110,13 +117,14 @@ module.exports = (()=>{
                 name:name,
                 description:description,
                 images:images,
+                deletedImages:deletedImages,
                 price:price,
                 discount:discount,
                 isAvailable:isAvailable,
                 status:status
             }
 
-            product.updateOne(productId,data).then((result)=>{
+            product.updateOne(data).then((result)=>{
                 return respond.status(200).send({success:true,message:'Product successfully updated',error:null,code:200,data:result})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
@@ -126,7 +134,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.delete('/delete',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.delete('/',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
             product.deleteAll().then((result)=>{
                 return respond.status(200).send({success:true,message:'All Products successfully deleted',error:null,code:200,data:result})
@@ -138,9 +146,9 @@ module.exports = (()=>{
         }
     })
 
-    routes.delete('/delele/:id',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.delete('/:id',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
-            let productId=request.body.productId
+            let productId=request.params.id
 
             if(!validator.validateEmptyFields(productId))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,code:400,data:null})

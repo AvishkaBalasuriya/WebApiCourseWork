@@ -1,6 +1,7 @@
 const configs = require('config')
 const jwtrsa = configs.get('accessTokens.jwtRsa')
 const jwt = require('jsonwebtoken')
+const userModel = require('../models/user')
 
 function checkJWT(req, res, next) {
     try{
@@ -23,7 +24,7 @@ function checkJWT(req, res, next) {
                     "data": null
                 })
             } 
-            
+            req.user = jwt.decode(token)
             next()
         })
     }catch(e){
