@@ -24,6 +24,23 @@ module.exports = (()=>{
         }
     })
 
+    routes.get('/vendor/:id',(request, respond)=>{
+        try{
+            let vendorId = request.params.id
+
+            if(!validator.validateEmptyFields(vendorId))
+                return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,code:400,data:null})
+
+            product.getForVendor(vendorId).then((products)=>{
+                return respond.status(200).send({success:true,message:'Products successfully fetched',error:null,code:200,data:products})
+            }).catch((e)=>{
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
+            })
+        }catch(e){
+            return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,code:500,data:null})
+        }
+    })
+
     routes.get('/:id',(request, respond)=>{
         try{
             let productId = request.params.id
@@ -95,7 +112,7 @@ module.exports = (()=>{
             if(request.fileValidationError){
                 return respond.status(200).send({success:false,message:request.fileValidationError,error:null,code:400,data:null})
             }
-            
+
             let updatedImages = []
 
             for (var i = 0; i < request.files.length; i++) {

@@ -35,6 +35,23 @@ function getAll(params=undefined){
     })
 }
 
+function getForVendor(vendorId){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            let product = await productModel.Product.find({vendor:new productModel.mongoose.Types.ObjectId(vendorId)}).populate('images','imageUrl')
+
+            if(!product)
+                return reject({message:null,error:"Unable to find products for provided vendor",code:404,data:null})
+
+            return resolve(products)
+
+        }catch(e){
+            return reject({message:"Undetected error",error:e.message,code:500,data:null})
+        }
+    })
+}
+
+
 function getOne(productId){
     return new Promise(async(resolve,reject)=>{
         try{
@@ -189,3 +206,4 @@ exports.addOne = addOne
 exports.updateOne = updateOne
 exports.deleteAll = deleteAll
 exports.deleteOne = deleteOne
+exports.getForVendor=getForVendor
