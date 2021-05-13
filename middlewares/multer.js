@@ -16,11 +16,15 @@ const storage = multer.diskStorage({
 const uploadMulter = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
+        if(req.files.length>5){
+            req.fileValidationError = 'You uploaded more than 5 images'
+            return cb(null, false, new Error('You uploaded more than 5 images')) 
+        }
         if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
             cb(null, true)
-        } else {
-            cb(null, false)
-            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'))
+        } else {    
+            req.fileValidationError = 'Invalid file type uploaded'
+            return cb(null, false, new Error('goes wrong on the mimetype'))
         }
     }
 })

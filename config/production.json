@@ -21,6 +21,10 @@
         "token":"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",
         "url":"https://api.sendgrid.com/v3/mail/send"
     },
+    "mobileValidation":{
+        "url":"http://apilayer.net/api/validate",
+        "apiKey":"161cfccdb3fe9a7efc91b8f08feb9e79"
+    },
     "accessTokens":{
         "tokens":["UQMP5plu9ruPcFVswINeLNcyHrDrYEUa","wX2PRd6AhwsKf6OgnqWRVJu6i6jB6yTT","rPE01rd8SEaJSdSsoxjrWZxd7B7ejTqd","YjFOMolrji5kr8M6iicdUsyIPa87aQ3B"],
         "jwtRsa":"48bb8ba1cacf1ebb14b346b1813af6d5973ca750bb98b12c9faf93e84bfc62ff0cd93f3043d53b06467153441e8b03a24df3b936a9f18e73bbb7263a8f67cb40"

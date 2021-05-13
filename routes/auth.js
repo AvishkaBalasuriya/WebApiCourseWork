@@ -1,5 +1,3 @@
-const userModel = require('../models/user')
-
 const login = require('../auth/login')
 const register = require('../auth/register')
 const forget = require('../auth/forget')
@@ -33,7 +31,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/register',(request, respond)=>{
+    routes.post('/register',async(request, respond)=>{
         try{
 
             let data = {
@@ -42,6 +40,7 @@ module.exports = (()=>{
                 passwordConfirm:request.body.passwordConfirm,
                 firstName:request.body.firstName,
                 lastName:request.body.lastName,
+                countryCode:request.body.countryCode,
                 mobileNumber:request.body.mobileNumber,
                 address:request.body.address,
                 isSocial:request.body.isSocial,
@@ -54,9 +53,19 @@ module.exports = (()=>{
             if(!validator.validateEmail(data.email))
                 return respond.status(200).send({success:false,message:'Provided email is not valid',error:null,code:400,data:null})
 
-            if(data.mobileNumber && !validator.validateMobileNumber(data.mobileNumber))
-                return respond.status(200).send({success:false,message:'Provided mobile number is not valid',error:null,code:400,data:null})
-            
+            let isMobileValid = null
+            if(data.mobileNumber){
+                await validator.validateMobileNumber(data.mobileNumber,data.countryCode).then((res)=>{
+                    isMobileValid=res
+                }).catch((e)=>{
+                    isMobileValid=e
+                })
+                if(!isMobileValid.status)
+                    return respond.status(200).send({success:false,message:isMobileValid.message,error:isMobileValid.error,code:isMobileValid.code,data:isMobileValid.data})
+                else
+                    data.mobileNumber=isMobileValid.data
+            }
+
             if(!validator.validateConfirmPassword(data.password,data.passwordConfirm))
                 return respond.status(200).send({success:false,message:'Passwords not matching',error:null,code:400,data:null})
     
@@ -91,6 +100,7 @@ module.exports = (()=>{
                 passwordConfirm:request.body.passwordConfirm,
                 firstName:request.body.firstName,
                 lastName:request.body.lastName,
+                countryCode:request.body.countryCode,
                 mobileNumber:request.body.mobileNumber,
                 address:request.body.address,
                 isSocial:request.body.isSocial,
@@ -103,8 +113,13 @@ module.exports = (()=>{
             if(!validator.validateEmail(data.email))
                 return respond.status(200).send({success:false,message:'Provided email is not valid',error:null,code:400,data:null})
 
-            if(data.mobileNumber && !validator.validateMobileNumber(data.mobileNumber))
-                return respond.status(200).send({success:false,message:'Provided mobile number is not valid',code:400,error:null,data:null})
+            if(data.mobileNumber){
+                validator.validateMobileNumber(data.mobileNumber,data.countryCode).then((res)=>{
+                    data.mobileNumber=res.data
+                }).catch((e)=>{
+                    return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
+                })
+            }
             
             if(!validator.validateConfirmPassword(data.password,data.passwordConfirm))
                 return respond.status(200).send({success:false,message:'Passwords not matching',error:null,code:400,data:null})
