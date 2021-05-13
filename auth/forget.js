@@ -1,7 +1,7 @@
 const otpModel = require('../models/otp')
 const userModel = require('../models/user')
 
-const admin = require('firebase-admin')
+const adminAuth = require('../services/firebase').getAdminAuth()
 
 const jwt = require('../utils/jwt')
 
@@ -21,7 +21,7 @@ module.exports=((otpId,rawPassword)=>{
 
             otpDetails.isActive=false
 
-            admin.auth().updateUser(user.firebaseUid,{password:rawPassword}).then(()=>{
+            adminAuth.updateUser(user.firebaseUid,{password:rawPassword}).then(()=>{
                 otpDetails.save().then((res)=>{
 
                     let payload = jwt.makePayloadWithUser(otpDetails.user)

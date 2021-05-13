@@ -45,7 +45,7 @@ module.exports = (()=>{
                 mobileNumber:request.body.mobileNumber,
                 address:request.body.address,
                 isSocial:request.body.isSocial,
-                type:request.body.type
+                type:0
             }
 
             if(!validator.validateEmptyFields(data.email,data.password,data.passwordConfirm,data.firstName,data.lastName,data.address,data.isSocial,data.type))
