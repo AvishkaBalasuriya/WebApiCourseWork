@@ -7,7 +7,7 @@ function getAll(){
     return new Promise(async(resolve,reject)=>{
         try{
             let orders = await orderModel.Order.find().populate([{
-                path: 'user.email',
+                path: 'user',
                 model: 'User'
             }, {
                 path: 'cart',
