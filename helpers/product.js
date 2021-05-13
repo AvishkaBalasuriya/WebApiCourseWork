@@ -13,19 +13,18 @@ function getAll(params=undefined){
             if(params){
                 let filters = {$or:[]}
                 for (const [key, value] of Object.entries(params)) {
-                    console.log(value)
-                    if(key==="keyword" && value!="undefined"){
-                        console.log("dwdwdwdwd")
+                    if(key==="keyword" && value!='""' && value!="undefined"){
                         filters['$or'].push({ $text: { $search: value } })
                         continue
                     }
-                    filter = {}
-                    filter[key]=value
-                    filters['$or'].push(filter)
+                    if(key!="keyword"){
+                        filter = {}
+                        filter[key]=value
+                        filters['$or'].push(filter)
+                    }
                 }
                 query=filters['$or'].length===0?{}:filters
             }
-            console.log(query)
 
             let products = await productModel.Product.find(query).populate('images','imageUrl')
 
