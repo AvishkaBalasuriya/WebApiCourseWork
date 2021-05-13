@@ -137,7 +137,7 @@ function addOne(data){
 function updateOne(data){
     return new Promise(async(resolve,reject)=>{
         try{
-            let order=await new orderModel.Order.findOne({_id:new orderModel.mongoose.Types.ObjectId(data.orderId)})
+            let order = await orderModel.Order.findOne({_id:new orderModel.mongoose.Types.ObjectId(data.orderId)})
 
             if(!order)
                 return reject({message:null,error:'Unable to find order',code:404,data:null})
