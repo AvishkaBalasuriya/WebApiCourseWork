@@ -17,6 +17,7 @@ const productRoute = require('./routes/product')
 const vendorRoute = require('./routes/vendor')
 const categoryRoute = require('./routes/category')
 const orderRoute = require('./routes/order')
+const dashboardRoute = require('./routes/dashboard')
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -29,6 +30,7 @@ app.use('/api/v1/product',productRoute)
 app.use('/api/v1/vendor',vendorRoute)
 app.use('/api/v1/category',categoryRoute)
 app.use('/api/v1/order',orderRoute)
+app.use('/api/v1/dashboard',dashboardRoute)
 
 app.use('/',express.static(path.join(__dirname, '/public/index.html')))
 app.all('*',(req,res)=>{
