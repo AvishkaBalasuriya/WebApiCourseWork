@@ -94,6 +94,7 @@ function addOne(data){
 
             await new Promise(async(resolve, reject) => {
                 for(const cartProductData of data.cart){
+                    console.log(cartProductData)
                     let cartItemData = new cartItemModel.CartItem({
                         cart: new cartModel.mongoose.Types.ObjectId(cart._id),
                         product:new cartItemModel.mongoose.Types.ObjectId(cartProductData.productId),
