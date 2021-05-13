@@ -16,6 +16,11 @@ function getAll(){
 function addNewMasterCategory(name){
     return new Promise(async(resolve,reject)=>{
         try{
+            let isExist = await masterCategoryModel.MasterCategory.count({name:name}) == 0?false:true
+
+            if(isExist)
+                return reject({message:"Category already exists",error:e.message,code:409,data:null})
+
             let masterCategory = new masterCategoryModel.MasterCategory({
                 name:name
             })
@@ -36,6 +41,11 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
 
             if(!masterCategory)
                 return reject({message:null,error:"Invalid master category ID",code:404,data:null})
+
+            let isExist = await subCategoryModel.SubCategory.count({name:SubCategoryName}) == 0?false:true
+
+            if(isExist)
+                return reject({message:"Category already exists",error:e.message,code:409,data:null})
 
             let subCategory = new subCategoryModel.SubCategory({
                 masterCategoryId:masterCategory._id,
@@ -60,7 +70,6 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
 function deleteSubCategory(subCategoryId){
     return new Promise(async(resolve,reject)=>{
         try{
-            console.log(subCategoryId)
             let subCategory = await subCategoryModel.SubCategory.deleteOne({_id:new subCategoryModel.mongoose.Types.ObjectId(subCategoryId)})
 
             console.log(subCategory)
