@@ -21,7 +21,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/add/masterCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.post('/masterCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
             let name = request.body.name
 
@@ -38,7 +38,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/add/subCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.post('/subCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
             let masterCategoryId = request.body.masterCategoryId
             let name = request.body.name
@@ -56,9 +56,9 @@ module.exports = (()=>{
         }
     })
 
-    routes.delete('/delete/subCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.delete('/subCategory/:id',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
-            let subCategoryId = request.body.subCategoryId
+            let subCategoryId = request.params.id
 
             if(!validator.validateEmptyFields(subCategoryId))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,data:null})
@@ -73,9 +73,9 @@ module.exports = (()=>{
         }
     })
 
-    routes.delete('/delete/masterCategory',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.delete('/masterCategory/:id',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
-            let masterCategoryId = request.body.masterCategoryId
+            let masterCategoryId = request.params.id
 
             if(!validator.validateEmptyFields(masterCategoryId))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,data:null})

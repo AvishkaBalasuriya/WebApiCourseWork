@@ -10,7 +10,10 @@ const orderSchema = new mongoose.Schema({
         ref: 'Cart' 
     },
     total: Number,
-    status: Number,
+    status: {
+        type:Number,
+        default:0
+    },
     createdAt: {
         type:Date,
         default:Date()

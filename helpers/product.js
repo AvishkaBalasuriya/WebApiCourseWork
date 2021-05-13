@@ -58,7 +58,7 @@ function addOne(data){
             let imageObj = []
 
             let product=new productModel.Product({
-                vendor:new productModel.mongoose.Types.ObjectId(),//data.vendorId),
+                vendor:new productModel.mongoose.Types.ObjectId(data.vendorId),
                 masterCategory:new productModel.mongoose.Types.ObjectId(data.masterCategoryId),
                 subCategory:new productModel.mongoose.Types.ObjectId(data.subCategoryId),
                 name:data.name,
@@ -97,14 +97,15 @@ function addOne(data){
     })
 }
 
-function updateOne(productId,data){
+function updateOne(data){
     return new Promise(async(resolve,reject)=>{
         try{
+            let imageObj = []
 
-            let product = await productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(productId)})
+            let product=await new productModel.Product.findOne({_id:new productModel.mongoose.Types.ObjectId(data.productId)})
 
             if(!product)
-                return reject({message:null,error:"Unable to find product for provided product id",code:404,data:null})
+                return reject({message:null,error:'Unable to find product',code:404,data:null})
 
             product.vendor=new productModel.mongoose.Types.ObjectId(data.vendorId),
             product.masterCategory=new productModel.mongoose.Types.ObjectId(data.masterCategoryId),
@@ -115,8 +116,31 @@ function updateOne(productId,data){
             product.discount=data.discount,
             product.isAvailable=data.isAvailable,
             product.status=data.status
-        
-            product.save().then(res=>{return resolve(products)}).catch((e)=>{return reject({message:"Unable to save to database",error:e.message,code:500,data:null})})
+
+            await new Promise(async(resolve, reject) => {
+                for(const deletedImage of data.deletedImages){
+                    await productImageModel.ProductImage.deleteOne({_id:deletedImage})
+                }
+                for(const image of data.images){
+                    let downloadUrl = await gcsRef.uploadImage(image).catch((e)=>{})
+                    let productImage = new productImageModel.ProductImage({
+                        product:new productModel.mongoose.Types.ObjectId(product._id),
+                        imageUrl:downloadUrl,
+                    })
+                    await productImage.save()
+
+                    imageObj.push(productImage)
+                }
+                return resolve(true)
+            })
+
+            product.images = imageObj
+
+            product.save().then((res)=>{
+                return resolve("Product successfully saved")
+            }).catch((e)=>{
+                return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
+            })
             
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500})
@@ -127,8 +151,11 @@ function updateOne(productId,data){
 function deleteAll(){
     return new Promise(async(resolve,reject)=>{
         try{
-
-            product.delete().then(res=>{return resolve(true)}).catch((e)=>{return reject({message:"Unable to delete",error:e.message,code:500,data:null})})
+            await productModel.Product.deleteMany().then(res=>{
+                productImageModel.ProductImage.deleteMany({product:new productModel.mongoose.Types.ObjectId(res._id)}).then((res)=>{
+                    return resolve(true)
+                })
+            }).catch((e)=>{return reject({message:"Unable to delete",error:e.message,code:500,data:null})})
 
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
@@ -139,9 +166,11 @@ function deleteAll(){
 function deleteOne(productId){
     return new Promise(async(resolve,reject)=>{
         try{
-        
-            product.delete({_id:new productModel.mongoose.Types.ObjectId(productId)}).then(res=>{return resolve(true)}).catch((e)=>{return reject({message:"Unable to delete",error:e.message,code:500,data:null})})
-
+            await productModel.Product.deleteOne({_id:new productModel.mongoose.Types.ObjectId(productId)}).then(res=>{
+                productImageModel.ProductImage.deleteMany({product:new productModel.mongoose.Types.ObjectId(res._id)}).then((res)=>{
+                    return resolve(true)
+                })
+            }).catch((e)=>{return reject({message:"Unable to delete",error:e.message,code:500,data:null})})
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }

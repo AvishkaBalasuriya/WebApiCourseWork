@@ -1,18 +1,14 @@
 const mongoose = require('mongoose')
 
 const cartSchema = new mongoose.Schema({
-    products: [
-        {
-            product:{
-                type: mongoose.Schema.Types.ObjectId,
-                ref:'Product'
-            },
-            qty:{
-                type:Number,
-                default:0
-            }        
-        }
-    ],
+    order:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Order'
+    },
+    items: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'CartItem'
+    }],
     createdAt: {
         type:Date,
         default:Date()
