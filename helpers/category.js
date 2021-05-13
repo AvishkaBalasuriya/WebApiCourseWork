@@ -72,8 +72,6 @@ function deleteSubCategory(subCategoryId){
         try{
             let subCategory = await subCategoryModel.SubCategory.deleteOne({_id:new subCategoryModel.mongoose.Types.ObjectId(subCategoryId)})
 
-            console.log(subCategory)
-
             if(!subCategory)
                 return reject({message:null,error:"Invalid sub category ID",code:404,data:null})
 

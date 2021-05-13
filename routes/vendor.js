@@ -47,15 +47,27 @@ module.exports = (()=>{
         }
     })
 
-    routes.delete('/',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.delete('/:id',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
-            let masterCategoryId = request.body.masterCategoryId
+            let vendorId = request.params.id
 
-            if(!validator.validateEmptyFields(masterCategoryId))
+            if(!validator.validateEmptyFields(vendorId))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,data:null})
 
-            category.deleteMasterCategory(masterCategoryId).then((products)=>{
-                return respond.status(200).send({success:true,message:'Master category & Sub categoris successfully deleted',error:null,code:200,data:products})
+            vendor.deleteVendor(vendorId).then((products)=>{
+                return respond.status(200).send({success:true,message:'Vendor successfully deleted',error:null,code:200,data:products})
+            }).catch((e)=>{
+                return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
+            })
+        }catch(e){
+            return respond.status(500).send({success:false,message:'Unexpected error occurs',error:e.message,data:null})
+        }
+    })
+
+    routes.delete('/',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+        try{
+            vendor.deleteVendors().then((products)=>{
+                return respond.status(200).send({success:true,message:'All vendors successfully deleted',error:null,code:200,data:products})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
