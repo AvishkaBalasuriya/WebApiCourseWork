@@ -1,6 +1,7 @@
 const orderModel = require('../models/order')
 const cartModel = require('../models/cart')
 const cartItemModel = require('../models/cartItem')
+const productModel = require('../models/product')
 
 function getAll(){
     return new Promise(async(resolve,reject)=>{
@@ -94,12 +95,13 @@ function addOne(data){
 
             await new Promise(async(resolve, reject) => {
                 for(const cartProductData of data.cart){
-                    console.log(cartProductData)
+                    console.log(cartProductData.product)
                     let cartItemData = new cartItemModel.CartItem({
                         cart: new cartModel.mongoose.Types.ObjectId(cart._id),
-                        product:new cartItemModel.mongoose.Types.ObjectId(cartProductData.productId),
+                        product:new productModel.mongoose.Types.ObjectId(cartProductData.productId),
                         qty:cartProductData.qty,
                     })
+                    console.log(cartItemData.product)
                     await cartItemData.save()
 
                     cart.items.push(cartItemData._id)
