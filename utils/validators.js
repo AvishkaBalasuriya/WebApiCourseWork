@@ -56,12 +56,16 @@ function validateEmail(contact){
     return contact.match(pattern)!=null?1:0
 }
 
-function validateContactType(contact){
-    if(validateMobileNumber(contact))
-        return 1
-    if(validateEmail(contact))
-        return 0
-    return -1
+async function validateContactType(contact){
+    return new Promise((resolve,reject)=>{
+        validateMobileNumber(contact,"LK").then((res)=>{
+            resolve(1)
+        }).catch((e)=>{
+            if(validateEmail(contact))
+                resolve(0)
+            resolve(-1)
+        })
+    })
 }
 
 exports.validatePassword=validatePassword

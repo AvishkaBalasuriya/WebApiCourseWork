@@ -5,14 +5,14 @@ module.exports = (()=>{
 
     let routes = require('express').Router()
 
-    routes.post('/issue',(request, respond)=>{
+    routes.post('/issue',async(request, respond)=>{
         try{
             let contact = request.body.contact
 
             if(!validator.validateEmptyFields(contact))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:null,code:400,data:null})
 
-            let contactType = validator.validateContactType(contact)
+            let contactType = await validator.validateContactType(contact)
 
             if(contactType===-1)
                 return respond.status(200).send({success:false,message:'Provided contact is not valid',error:null,code:400,data:null})
