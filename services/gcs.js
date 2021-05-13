@@ -1,9 +1,9 @@
-const admin = require('firebase-admin')
+const bucketRef = require('../services/firebase').getBucket()
 const uuid = require('uuid')
 
 class GCS{
     constructor(){
-      this.bucket = admin.storage().bucket()
+      this.bucket = bucketRef
     }
 
     uploadImage(filePath){

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const hasher = require('../utils/hasher')
 
 const userSchema = new mongoose.Schema({
+    firebaseUid:String,
     email: {
         type: String,
         validate:{
@@ -12,7 +13,6 @@ const userSchema = new mongoose.Schema({
             message: "Incorrect email address"
         }
     },
-    password: String,
     firstName: String,
     lastName: String,
     mobileNumber: {
@@ -34,13 +34,6 @@ const userSchema = new mongoose.Schema({
         type:Date,
         default:Date()
     }
-})
-
-userSchema.virtual('rawPassword').get(function(){ 
-    return this.rawPassword
-}).set(function(rawPassword){
-    console.log("Changing user password "+rawPassword)
-    this.password=hasher.hash(rawPassword)
 })
 
 exports.userSchema = userSchema
