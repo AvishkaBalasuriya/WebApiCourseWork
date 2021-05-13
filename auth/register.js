@@ -9,11 +9,9 @@ module.exports=((data)=>{
             if(!isUserAlreadyRegistered)
                 return reject({message:null,error:'User already registered',code:409,data:null})
 
-            let user = new userModel.User({email:data.email,firstName:data.firstName,
-                lastName:data.lastName,mobileNumber:data.mobileNumber,address:data.address,isSocial:data.isSocial,type:data.type})
-
             auth.createUserWithEmailAndPassword(data.email, data.password).then((userInstance) => {
-                user.firebaseUid=userInstance.uid
+                let user = new userModel.User({firebaseUid:userInstance.user.uid,email:data.email,firstName:data.firstName,
+                    lastName:data.lastName,mobileNumber:data.mobileNumber,address:data.address,isSocial:data.isSocial,type:data.type})
                 user.save().then((res)=>{
                     let data = {
                         userId:user._id,
