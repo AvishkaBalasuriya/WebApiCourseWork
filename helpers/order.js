@@ -5,7 +5,13 @@ const cartItemModel = require('../models/cartItem')
 function getAll(){
     return new Promise(async(resolve,reject)=>{
         try{
-            let orders = await orderModel.Order.find().populate('user','cart')
+            let orders = await orderModel.Order.find().populate([{
+                path: 'cart',
+                model: 'User'
+            }, {
+                path: 'cart',
+                model: 'Cart'
+            }])
 
             return resolve(orders)
         }catch(e){
@@ -17,8 +23,21 @@ function getAll(){
 function getAllForUser(userId){
     return new Promise(async(resolve,reject)=>{
         try{
-            let orders = await orderModel.Order.find({user:new orderModel.mongoose.Types.ObjectId(userId)}).populate('user','cart')
-
+            let orders = await orderModel.Order.find({user:new orderModel.mongoose.Types.ObjectId(userId)}).populate([{
+                path: 'user.email',
+                model: 'User'
+            }, {
+                path: 'cart',
+                model: 'Cart',
+                populate: {
+                    path: 'items',
+                    model: 'CartItem',
+                    populate: {
+                        path: 'product',
+                        model: 'Product'
+                    },
+                },
+            }])
             return resolve(orders)
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
