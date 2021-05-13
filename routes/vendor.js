@@ -22,8 +22,11 @@ module.exports = (()=>{
         }
     })
 
-    routes.post('/add',jwtMiddleware,checkAdminPermissions,uploadMulter.array('logo', 1),(request, respond)=>{
+    routes.post('/',jwtMiddleware,checkAdminPermissions,uploadMulter.array('logo', 1),(request, respond)=>{
         try{
+            if(request.fileValidationError){
+                return respond.status(200).send({success:false,message:request.fileValidationError,error:null,code:400,data:null})
+            }
 
             let data = {
                 name:request.body.name,
@@ -44,7 +47,7 @@ module.exports = (()=>{
         }
     })
 
-    routes.delete('/delete/vendor',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.delete('/',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
         try{
             let masterCategoryId = request.body.masterCategoryId
 
