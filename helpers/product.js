@@ -14,7 +14,7 @@ function getAll(params=undefined){
                 let filters = {$or:[]}
                 for (const [key, value] of Object.entries(params)) {
                     console.log(value)
-                    if(key==="keyword" && value!=undefined){
+                    if(key==="keyword" && value!="undefined"){
                         console.log("dwdwdwdwd")
                         filters['$or'].push({ $text: { $search: value } })
                         continue
