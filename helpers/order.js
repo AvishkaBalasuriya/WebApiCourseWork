@@ -7,13 +7,24 @@ function getAll(){
     return new Promise(async(resolve,reject)=>{
         try{
             let orders = await orderModel.Order.find().populate([{
-                path: 'cart',
+                path: 'user.email',
                 model: 'User'
             }, {
                 path: 'cart',
-                model: 'Cart'
+                model: 'Cart',
+                populate: {
+                    path: 'items',
+                    model: 'CartItem',
+                    populate: {
+                        path: 'product',
+                        model: 'Product',
+                        populate: {
+                            path: 'images',
+                            model: 'ProductImage'
+                        },
+                    },
+                },
             }])
-
             return resolve(orders)
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
