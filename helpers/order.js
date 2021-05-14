@@ -36,7 +36,7 @@ function getAllForUser(userId){
     return new Promise(async(resolve,reject)=>{
         try{
             let orders = await orderModel.Order.find({user:new orderModel.mongoose.Types.ObjectId(userId)}).populate([{
-                path: 'user.email',
+                path: 'user',
                 model: 'User'
             }, {
                 path: 'cart',

@@ -1,5 +1,4 @@
 const codeGenerator = require('../utils/codeGenerator')
-const validators = require('../utils/validators')
 const time = require('../utils/time')
 
 const sms = require('../services/sms')
@@ -7,6 +6,8 @@ const email = require('../services/email')
 
 const userModel = require('../models/user')
 const otpModel = require('../models/otp')
+
+const moment = require('moment')
 
 function issueAnOtp(contact,contactType){
     return new Promise(async(resolve,reject)=>{
@@ -21,8 +22,10 @@ function issueAnOtp(contact,contactType){
                 return reject({message:null,error:"Contact information is not match with any of our users",code:404,data:null})
     
             let code = codeGenerator.generateOtp()
+
+            let createdAt = moment(new Date()).add(2, 'm').toDate()
     
-            let otpDetails = otpModel.Otp({user:user,code:code,sentTo:contactType})
+            let otpDetails = new otpModel.Otp({user:user,code:code,sentTo:contactType,createdAt:createdAt})
     
             let messageContent = "Please use below OTP to reset your password. \n "+code.toString()
     
@@ -65,10 +68,8 @@ function verifyAnOtp(otp,userId){
 
             let timeAfterOtpIssued = time.calculateTimeDifferent(otpDetails.createdAt,new Date())
 
-            console.log(timeAfterOtpIssued)
-
-            // if(timeAfterOtpIssued>=120)
-            //     return reject({message:null,error:"OTP code expired. Please try with new OTP",code:498,data:null})
+            if(timeAfterOtpIssued>=120)
+                return reject({message:null,error:"OTP code expired. Please try with new OTP",code:498,data:null})
 
             if(user.status!=1){
                 user.status=1

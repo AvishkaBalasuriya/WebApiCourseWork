@@ -9,13 +9,10 @@ module.exports=((otpId,rawPassword)=>{
     return new Promise(async(resolve,reject)=>{
 
         try{
-            let otpDetails = await otpModel.Otp.findOne({uuid:otpId})
+            let otpDetails = await otpModel.Otp.findOne({uuid:otpId,isActive:true})
 
             if(!otpDetails)
                 return reject({message:null,error:"Invalid OTP id",code:401,data:null})
-
-            if(!otpDetails.isActive)
-                return reject({message:null,error:"This OTP is already used",code:401,data:null})
             
             let user = await userModel.User.findOne({_id:new userModel.mongoose.Types.ObjectId(otpDetails.user)})
 
