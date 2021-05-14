@@ -32,7 +32,7 @@ app.use('/api/v1/category',categoryRoute)
 app.use('/api/v1/order',orderRoute)
 app.use('/api/v1/dashboard',dashboardRoute)
 
-app.use('/',express.static(path.join(__dirname, '/public/index.html')))
+app.use('/admin',express.static(path.join(__dirname, '/public/admin.index.html')))
 app.all('*',(req,res)=>{
   res.sendFile('index.html',{ root: path.join(__dirname, '/public/')})
 })

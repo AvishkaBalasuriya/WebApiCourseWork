@@ -1,0 +1,1 @@
+{"version":3,"sources":["store/constant.js"],"names":["DEMO","BLANK_LINK"],"mappings":"mIAMeA,IANF,CACTC,WAAY,O","file":"static/js/0.bda92fd3.chunk.js","sourcesContent":["const DEMO = {\n    BLANK_LINK: \"#!\",\n};\n\n\n\nexport default DEMO;"],"sourceRoot":""}
