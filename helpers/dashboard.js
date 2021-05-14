@@ -6,16 +6,16 @@ const vendorModel = require('../models/vendor')
 function getAll(){
     return new Promise(async(resolve,reject)=>{
         try{
-            let vendorCount = await vendorModel.Vendor.count()
-            let userAdminCount = await userModel.User.count({type:1})
-            let userCount = await userModel.User.count({type:0})
-            let productCount = await productModel.Product.count()
-            let orderCount = await orderModel.Order.count()
-            let orderPendingCount = await orderModel.Order.count({status:0})
-            let orderAcceptCount = await orderModel.Order.count({status:1})
-            let orderProcessingCount = await orderModel.Order.count({status:2})
-            let orderShippedCount = await orderModel.Order.count({status:3})
-            let orderCompleteCount = await orderModel.Order.count({status:4})
+            let vendorCount = await vendorModel.Vendor.countDocuments()
+            let userAdminCount = await userModel.User.countDocuments({type:1})
+            let userCount = await userModel.User.countDocuments({type:0})
+            let productCount = await productModel.Product.countDocuments()
+            let orderCount = await orderModel.Order.countDocuments()
+            let orderPendingCount = await orderModel.Order.coucountDocumentsnt({status:0})
+            let orderAcceptCount = await orderModel.Order.countDocuments({status:1})
+            let orderProcessingCount = await orderModel.Order.countDocuments({status:2})
+            let orderShippedCount = await orderModel.Order.countDocuments({status:3})
+            let orderCompleteCount = await orderModel.Order.countDocuments({status:4})
 
             let data = {
                 vendorCount:vendorCount,
