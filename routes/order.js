@@ -24,6 +24,7 @@ module.exports = (()=>{
     routes.get('/user/',jwtMiddleware,(request, respond)=>{
         try{
             let userId = request.user.id
+
             order.getAllForUser(userId).then((orders)=>{
                 return respond.status(200).send({success:true,message:'Orders successfully fetched',error:null,code:200,data:orders})
             }).catch((e)=>{

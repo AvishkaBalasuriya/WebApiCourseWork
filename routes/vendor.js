@@ -10,7 +10,7 @@ module.exports = (()=>{
 
     let routes = require('express').Router()
 
-    routes.get('/',jwtMiddleware,checkAdminPermissions,(request, respond)=>{
+    routes.get('/',(request, respond)=>{
         try{
             vendor.getAll().then((vendors)=>{
                 return respond.status(200).send({success:true,message:'Vendors successfully fetched',error:null,code:200,data:vendors})

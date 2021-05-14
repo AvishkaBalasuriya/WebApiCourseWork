@@ -4,8 +4,10 @@ const subCategoryModel = require('../models/subCategory')
 function getAll(){
     return new Promise(async(resolve,reject)=>{
         try{
-            let categories = await masterCategoryModel.MasterCategory.find().populate('subCategory')
-        
+            let categories = await masterCategoryModel.MasterCategory.find().populate('subCategory').lean()
+
+            categories['child']=categories['subCategory']
+            delete categories['subCategory']
             resolve(categories)
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
