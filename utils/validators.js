@@ -1,5 +1,4 @@
-const axios = require('axios')
-const config = require('config')
+const mobileValidate = require('../services/mobileValidate')
 
 function validatePassword(password){
     const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/gm
@@ -33,20 +32,18 @@ function isNumber(...args){
     return is_valid
 }
 
-function validateMobileNumber(contact,countryCode){
+async function validateMobileNumber(contact,countryCode){
     return new Promise((resolve,reject)=>{
-        let configApi = {
-            method: 'GET',
-            url: `${config.get("mobileValidation.url")}?access_key=${config.get("mobileValidation.apiKey")}&number=${contact}&country_code=${countryCode}`
-        }
-        axios(configApi).then((response)=>{
-            if(response.data.success===false)
-                return reject({status:false,message:null,error:response.data.error.info,code:400,data:null})
-            if(response.data.valid===false)
+        mobileValidate.validateMobile(contact,countryCode).then((result)=>{
+            if(result.data.success===false)
+                return reject({status:false,message:null,error:result.data.error.info,code:400,data:null})
+            else if(result.data.valid===false)
                 return reject({status:false,message:null,error:"Invalid mobile number format",code:400,data:null})
-            return resolve({status:true,data:response.data.international_format.slice(1,response.data.international_format.length)})
+            else
+                return resolve({status:true,data:result.data.international_format.slice(1,result.data.international_format.length)})
         }).catch((e)=>{
-            return reject({status:false,message:e.message,error:null,code:424,data:null})
+            console.log(e)
+            return reject(e)
         })
     })
 }
