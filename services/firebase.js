@@ -1,16 +1,17 @@
 let firebase = require('firebase')
 let admin = require("firebase-admin")
+let config = require("config")
 
 const serviceAccount = require('../config/firebaseStorage.json')
 
 let configs = {
-    apiKey: "AIzaSyDsSFhxDimSp5Vx3gx4QMpd_xwD7sdzK-E",
-    authDomain: "webapi-3e0ee.firebaseapp.com",
-    projectId: "webapi-3e0ee",
-    storageBucket: "gs://webapi-3e0ee.appspot.com",
-    messagingSenderId: "26882674159",
-    appId: "1:26882674159:web:ec590ed498996de696ba1a",
-    measurementId: "G-35YK6GJEZC"
+    apiKey: config.get("firebase.apiKey"),
+    authDomain: config.get("firebase.authDomain"),
+    projectId: config.get("firebase.projectId"),
+    storageBucket: config.get("firebase.storageBucket"),
+    messagingSenderId: config.get("firebase.messagingSenderId"),
+    appId: config.get("firebase.appId"),
+    measurementId: config.get("firebase.measurementId")
 }
 
 firebase.default.initializeApp(configs)
