@@ -28,7 +28,6 @@ function checkJWT(req, res, next) {
             next()
         })
     }catch(e){
-        console.log(e.message)
         return res.status(500).send({
             "success": false,
             "message": e.message, 

@@ -15,8 +15,7 @@ const productSchema = new mongoose.Schema({
     },
     images: [{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'ProductImage',
-        default:'https://firebasestorage.googleapis.com/v0/b/webapi-3e0ee.appspot.com/o/product_default.jpeg?alt=media&token=bfc3594d-f434-4420-820b-e8c4888830f1' 
+        ref: 'ProductImage'
     }],
     name: String,
     description: String,

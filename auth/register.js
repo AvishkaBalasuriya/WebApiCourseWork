@@ -16,10 +16,13 @@ module.exports=((data)=>{
                     let data = {
                         userId:user._id,
                     }
-                    return resolve(data)
+                    otp.issueAnOtp(user.email,0).then((result)=>{
+                        return resolve(data)
+                    }).catch((e)=>{
+                        return reject(e)
+                    })
                 }).catch((e)=>{return reject({message:'Unable to save user',error:e.message,code:500,data:null})})
             }).catch((e) => {
-                console.log("d")
                 return reject({message:'Unable to create user',error:e.message,code:500,data:null})
             })
 

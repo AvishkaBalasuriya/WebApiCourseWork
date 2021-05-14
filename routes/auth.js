@@ -33,7 +33,6 @@ module.exports = (()=>{
 
     routes.post('/register',async(request, respond)=>{
         try{
-
             let data = {
                 email:request.body.email,
                 password:request.body.password,
@@ -49,7 +48,6 @@ module.exports = (()=>{
 
             if(!validator.validateEmptyFields(data.email,data.password,data.passwordConfirm,data.firstName,data.lastName,data.address,data.isSocial,data.type))
                 return respond.status(200).send({success:false,message:'Missing or empty required fields',error:'Missing or empty required fields',code:400,data:null})
-
             if(!validator.validateEmail(data.email))
                 return respond.status(200).send({success:false,message:'Provided email is not valid',error:null,code:400,data:null})
 
@@ -68,7 +66,6 @@ module.exports = (()=>{
 
             if(!validator.validateConfirmPassword(data.password,data.passwordConfirm))
                 return respond.status(200).send({success:false,message:'Passwords not matching',error:null,code:400,data:null})
-    
             if(!validator.validatePassword(data.password))
                 return respond.status(200).send({success:false,message:'Password mot matching security criteria',error:null,code:400,data:null})
             

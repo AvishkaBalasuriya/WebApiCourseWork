@@ -142,7 +142,6 @@ function updateOne(data){
 
             await new Promise(async(resolve, reject) => {
                 for(const deletedImage of JSON.parse(data.deletedImages)){
-                    console.log(deletedImage)
                     await productImageModel.ProductImage.deleteOne({_id:new productImageModel.mongoose.Types.ObjectId(deletedImage)})
                 }
 
