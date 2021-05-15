@@ -120,10 +120,8 @@ function addOne(data){
                 items:[]
             })
 
-            console.log(data.cart)
-
             new Promise(async(resolve, reject) => {
-                for(const cartProductData of JSON.parse(data.cart)){
+                for(const cartProductData of data.cart){
                     let cartItemData = new cartItemModel.CartItem({
                         cart: new cartModel.mongoose.Types.ObjectId(cart._id),
                         product:new productModel.mongoose.Types.ObjectId(cartProductData.productId),
