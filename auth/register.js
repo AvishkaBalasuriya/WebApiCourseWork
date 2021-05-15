@@ -1,5 +1,6 @@
 const userModel = require('../models/user')
 const auth = require('../services/firebase').getAuth()
+const otp = require('../helpers/otp')
 
 module.exports=((data)=>{
     return new Promise(async(resolve,reject)=>{
