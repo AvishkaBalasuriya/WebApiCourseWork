@@ -4,6 +4,8 @@ const cartItemModel = require('../models/cartItem')
 const userModel = require('../models/user')
 const productModel = require('../models/product')
 
+const email = require('../services/email')
+
 const ORDERSTATUS = {
     0:"Pending",
     1:"Accept",
@@ -102,7 +104,7 @@ function getOne(orderId){
 function addOne(data){
     return new Promise(async(resolve,reject)=>{
         try{
-            let userData = await userModel.User.find({_id:data.user})
+            let userData = await userModel.User.findOne({_id:data.user})
             
             if(!userData)
                 return reject({message:"Unable to get user data",error:null,code:404,data:null})
@@ -159,7 +161,7 @@ function updateOne(data){
             if(!order)
                 return reject({message:null,error:'Unable to find order',code:404,data:null})
 
-            let userData = await userModel.User.find({_id:order.user})
+            let userData = await userModel.User.findOne({_id:order.user})
 
             if(!userData)
                 return reject({message:null,error:'Unable to find user data',code:404,data:null})
