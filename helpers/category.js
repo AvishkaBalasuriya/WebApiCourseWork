@@ -47,7 +47,7 @@ function addNewSubCategory(masterCategoryId,SubCategoryName){
             let isExist = await subCategoryModel.SubCategory.count({name:SubCategoryName}) == 0?false:true
 
             if(isExist)
-                return reject({message:"Category already exists",error:e.message,code:409,data:null})
+                return reject({message:"Category already exists",error:null,code:409,data:null})
 
             let subCategory = new subCategoryModel.SubCategory({
                 masterCategoryId:masterCategory._id,
