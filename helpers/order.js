@@ -104,7 +104,7 @@ function addOne(data){
                 items:[]
             })
 
-            await new Promise(async(resolve, reject) => {
+            new Promise(async(resolve, reject) => {
                 console.log(data.cart)
                 console.log(typeof(data.cart))
                 for(const cartProductData of data.cart){
@@ -118,15 +118,17 @@ function addOne(data){
                     cart.items.push(cartItemData._id)
                 }
                 return resolve(true)
-            })
-
-            cart.save().then((res)=>{
-                order.cart=new cartModel.mongoose.Types.ObjectId(cart._id)
-                order.save().then((res)=>{
-                    return resolve("Order successfully saved")
-                }).catch((e)=>{
-                    return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
+            }).then(()=>{
+                cart.save().then((res)=>{
+                    order.cart=new cartModel.mongoose.Types.ObjectId(cart._id)
+                    order.save().then((res)=>{
+                        return resolve("Order successfully saved")
+                    }).catch((e)=>{
+                        return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
+                    })
                 })
+            }).catch((e)=>{
+                return reject({message:"Unable to add cart item data",error:e.message,code:400,data:null})
             })
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
