@@ -112,7 +112,7 @@ module.exports = (()=>{
             }
 
             order.updateOne(data).then((result)=>{
-                return respond.status(200).send({success:true,message:'Product successfully updated',error:null,code:200,data:result})
+                return respond.status(200).send({success:true,message:'Order successfully updated',error:null,code:200,data:result})
             }).catch((e)=>{
                 return respond.status(200).send({success:false,message:e.message,error:e.error,code:e.code,data:e.data})
             })
