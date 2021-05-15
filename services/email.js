@@ -36,8 +36,8 @@ function sendEmail(to,subject,text){
             },
             data : body
           }
-          
-        axios(apiReqConfig).then(()=>{
+        
+        axios(apiReqConfig).then((res)=>{
             return resolve(true)
         }).catch((error)=>{
             return reject(error)
