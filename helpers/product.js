@@ -162,7 +162,8 @@ function updateOne(data){
                 return resolve(true)
             })
 
-            product.images = imageObj
+            if(data.deletedImages.length!=0)
+                product.images = imageObj
 
             product.save().then((res)=>{
                 return resolve("Product successfully saved")
