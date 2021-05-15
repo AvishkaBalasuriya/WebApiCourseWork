@@ -141,7 +141,7 @@ function updateOne(data){
             product.isAvailable=data.isAvailable,
             product.status=data.status
 
-            let deletedImages = JSON.parse(data.deletedImages).length
+            let deletedImages = JSON.parse(data.deletedImages)
 
             console.log(deletedImages)
             console.log(data.images)
