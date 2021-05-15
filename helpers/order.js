@@ -105,8 +105,6 @@ function addOne(data){
             })
 
             new Promise(async(resolve, reject) => {
-                console.log(data.cart)
-                console.log(typeof(data.cart))
                 for(const cartProductData of data.cart){
                     let cartItemData = new cartItemModel.CartItem({
                         cart: new cartModel.mongoose.Types.ObjectId(cart._id),
@@ -114,7 +112,6 @@ function addOne(data){
                         qty:cartProductData.qty,
                     })
                     await cartItemData.save()
-                    console.log(cartItemData)
                     cart.items.push(cartItemData._id)
                 }
                 return resolve(true)
