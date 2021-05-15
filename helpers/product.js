@@ -16,22 +16,19 @@ function getAll(params=undefined){
                 for (const [key, value] of Object.entries(params)) {
                     if(key==="keyword" && value!='""' && value!="undefined" && value!='"undefined"'){
                         keywordFilter={ $text: { $search: value } }
-                        continue
                     }
                     if(key!="keyword"){
                         filter = {}
-                        filter[key]=value
-                        console.log(filter)
+                        filter[key]=value 
                         filters['$or'].push(filter)
                     }
                 }
                 query=filters['$or'].length===0?{}:filters
             }
 
-            let products = await productModel.Product.find({ $and:[query,keywordFilter]}).populate('images','imageUrl')
+            let products = await productModel.Product.find({$and:[query,keywordFilter]}).populate('images','imageUrl')
 
             return resolve(products)
-
         }catch(e){
             return reject({message:"Undetected error",error:e.message,code:500,data:null})
         }
