@@ -1,7 +1,16 @@
 const orderModel = require('../models/order')
 const cartModel = require('../models/cart')
 const cartItemModel = require('../models/cartItem')
+const userModel = require('../models/user')
 const productModel = require('../models/product')
+
+const ORDERSTATUS = {
+    0:"Pending",
+    1:"Accept",
+    2:"Proccessing",
+    3:"Shipped",
+    4:"Complete"
+}
 
 function getAll(){
     return new Promise(async(resolve,reject)=>{
@@ -93,6 +102,11 @@ function getOne(orderId){
 function addOne(data){
     return new Promise(async(resolve,reject)=>{
         try{
+            let userData = await userModel.User.find({_id:data.user})
+            
+            if(!userData)
+                return reject({message:"Unable to get user data",error:null,code:404,data:null})
+
             let order=new orderModel.Order({
                 user:new orderModel.mongoose.Types.ObjectId(data.user),
                 total:data.total,
@@ -119,7 +133,11 @@ function addOne(data){
                 cart.save().then((res)=>{
                     order.cart=new cartModel.mongoose.Types.ObjectId(cart._id)
                     order.save().then((res)=>{
-                        return resolve("Order successfully saved")
+                        email.sendEmail(userData.email,"Order Placed",`Your order is successfully placed. Order ID is ${order.id}`).then(()=>{
+                            return resolve("Order successfully saved")
+                        }).catch((e)=>{
+                            return reject({message:"Unable to send email",error:e.message,code:424,data:null})
+                        })
                     }).catch((e)=>{
                         return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
                     })
@@ -141,10 +159,19 @@ function updateOne(data){
             if(!order)
                 return reject({message:null,error:'Unable to find order',code:404,data:null})
 
+            let userData = await userModel.User.find({_id:order.user})
+
+            if(!userData)
+                return reject({message:null,error:'Unable to find user data',code:404,data:null})
+
             order.status=data.status
 
             order.save().then((res)=>{
-                return resolve("Order successfully saved")
+                email.sendEmail(userData.email,"Order Placed",`Your order is now on ${ORDERSTATUS[data.status]} state. Thank you.`).then(()=>{
+                    return resolve("Order successfully saved")
+                }).catch((e)=>{
+                    return reject({message:"Unable to send email",error:e.message,code:424,data:null})
+                })
             }).catch((e)=>{
                 return reject({message:"Unable to save to database",error:e.message,code:500,data:null})
             })
