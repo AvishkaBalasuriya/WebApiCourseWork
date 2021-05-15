@@ -141,11 +141,13 @@ function updateOne(data){
             product.isAvailable=data.isAvailable,
             product.status=data.status
 
-            console.log(data.deletedImages)
+            let deletedImages = JSON.parse(data.deletedImages).length
+
+            console.log(deletedImages)
             console.log(data.images)
 
             await new Promise(async(resolve, reject) => {
-                for(const deletedImage of JSON.parse(data.deletedImages)){
+                for(const deletedImage of deletedImages){
                     await productImageModel.ProductImage.deleteOne({_id:new productImageModel.mongoose.Types.ObjectId(deletedImage)})
                 }
 
@@ -162,7 +164,7 @@ function updateOne(data){
                 return resolve(true)
             })
 
-            if(data.deletedImages.length!=0)
+            if(deletedImages.length!=0)
                 product.images = imageObj
 
             product.save().then((res)=>{
