@@ -9,16 +9,16 @@
         "password":"webApi2021"
     },
     "sms":{
-        "userId":"13396",
-        "apiKey":"d5m3SCKPrzzSDXAOLX5C",
+        "userId":"13404",
+        "apiKey":"nqi2L3ICwvLyWyXJTrHa",
         "senderId":"NotifyDEMO",
         "url":"https://app.notify.lk/api/v1/send"
     },
     "email":{
-        "email":"avishkabalasuriya980330@gmail.com",
+        "email":"avishka@incubatelabs.com",
         "name":"ShopMore",
-        "replyEmail":"avishkabalasuriya980330@gmail.com",
-        "token":"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",
+        "replyEmail":"avishka@incubatelabs.com",
+        "token":"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",
         "url":"https://api.sendgrid.com/v3/mail/send"
     },
     "mobileValidation":{
