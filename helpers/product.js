@@ -149,8 +149,8 @@ function updateOne(data){
             await new Promise(async(resolve, reject) => {
                 for(const deletedImage of deletedImages){
                     await productImageModel.ProductImage.deleteOne({_id:new productImageModel.mongoose.Types.ObjectId(deletedImage)})
-                    if(data.images.length!=0){  
-                        data.images = data.images.filter(image => image != deletedImage)
+                    if(product.images.length!=0){  
+                        product.images = product.images.filter(image => image != deletedImage)
                     }
                 }
 

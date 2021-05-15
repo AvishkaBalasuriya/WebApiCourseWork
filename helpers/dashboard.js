@@ -11,7 +11,7 @@ function getAll(){
             let userCount = await userModel.User.countDocuments({type:0})
             let productCount = await productModel.Product.countDocuments()
             let orderCount = await orderModel.Order.countDocuments()
-            let orderPendingCount = await orderModel.Order.coucountDocumentsnt({status:0})
+            let orderPendingCount = await orderModel.Order.countDocuments({status:0})
             let orderAcceptCount = await orderModel.Order.countDocuments({status:1})
             let orderProcessingCount = await orderModel.Order.countDocuments({status:2})
             let orderShippedCount = await orderModel.Order.countDocuments({status:3})
